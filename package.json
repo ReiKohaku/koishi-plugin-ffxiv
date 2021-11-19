@@ -1,0 +1,49 @@
+{
+  "name": "koishi-plugin-ffxiv",
+  "version": "1.0.0",
+  "description": "A Final Fantasy XIV helper plugin for koishi",
+  "private": false,
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "typings": "build/index.d.ts",
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "files": [
+    "README.md",
+    "package.json",
+    "tsconfig.json",
+    "build"
+  ],
+  "dependencies": {
+    "axios": "^0.24.0",
+    "koishi-core": "^3.14.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+	"build": "tsc",
+    "release": "tsc && npm publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ReiKohaku/koishi-plugin-ffxiv.git"
+  },
+  "keywords": [
+    "ffxiv",
+    "bot",
+    "koishi"
+  ],
+  "author": {
+    "name": "ReiKohaku",
+	"email": "hbsjzjwj@gmail.com",
+	"url": "https://github.com/ReiKohaku"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ReiKohaku/koishi-plugin-ffxiv/issues"
+  },
+  "homepage": "https://github.com/ReiKohaku/koishi-plugin-ffxiv#readme",
+  "publishConfig": {
+    "access": "public"
+  }
+}
