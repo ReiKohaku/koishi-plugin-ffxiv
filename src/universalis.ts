@@ -11,14 +11,16 @@ export function apply(ctx: Context) {
         .shortcut("猫区物价", { fuzzy: true, options: { s: "猫小胖" } })
         .action(async({ session, options }, name: string) => {
             if (!name || !name.length) return "请输入要查询物价的物品名称！";
+            const isGroupMsg: boolean = session.subtype === "group";
             try {
                 if (name.toLowerCase().endsWith("hq")) {
                     name = name.slice(0, name.length - 2);
                     options.hq = true;
                 }
+                const limit = isGroupMsg ? 5 : 10;
                 let item: ItemBase, page: number = 1;
                 while (!item) {
-                    const searchResult = await searchItem(name, { limit: 10, page });
+                    const searchResult = await searchItem(name, { limit, page });
                     if (searchResult.Pagination.ResultsTotal > 1) {
                         const textResult =
                             `查询到 ${searchResult.Pagination.ResultsTotal} 个名字中包含“${name}”的物品。\r` +
@@ -45,14 +47,14 @@ export function apply(ctx: Context) {
                 }
 
                 const saleInfo = await getMarketCurrentlyShown(options.s || "莫古力", item.ID, { hq: options.hq ? 1 : undefined });
-                return `${segment("image", {url: `https://cafemaker.wakingsands.com${item.Icon}`})}\r` +
+                return (isGroupMsg ? "" : `${segment("image", {url: `https://cafemaker.wakingsands.com${item.Icon}`})}\r`) +
                     `[${item.LevelItem}]${item.Name}` +
                     `在${saleInfo.worldName || `${saleInfo.dcName}区`}的售卖信息：\r` +
                     `最后更新于 ${new Date(saleInfo.lastUploadTime).toLocaleString()}\r` +
                     `最高NQ/HQ价格：${saleInfo.maxPriceNQ}/${saleInfo.maxPriceHQ}\r` +
                     `最低NQ/HQ价格：${saleInfo.minPriceNQ}/${saleInfo.minPriceHQ}\r` +
-                    `正售卖的前${Math.min(saleInfo.listings.length, 10)}组商品信息：\r` +
-                    saleInfo.listings.slice(0, 10).map(item => `${item.worldName ? `[${item.worldName}]` : ""}${item.hq ? "[HQ]" : ""}${item.quantity}个×${item.pricePerUnit}金＝${item.total}金`).join("\r");
+                    `正售卖的前${Math.min(saleInfo.listings.length, limit)}组商品信息：\r` +
+                    saleInfo.listings.slice(0, limit).map(item => `${item.worldName ? `[${item.worldName}]` : ""}${item.hq ? "[HQ]" : ""}${item.quantity}个×${item.pricePerUnit}金＝${item.total}金`).join("\r");
             } catch (e) {
                 console.error(e);
                 return "查询失败，错误信息：\r" + e;
