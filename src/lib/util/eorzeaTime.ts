@@ -22,6 +22,43 @@ export class EorzeaTime {
     public toTimeString(): string {
         return `${prefixNum(this.hour)}:${prefixNum(this.minute)}`;
     }
+
+    /**
+     * 艾欧泽亚时间戳
+     */
+    public getTime(): number {
+        return this.second * TimeUnit.SECOND +
+            this.minute * TimeUnit.MINUTE +
+            this.hour * TimeUnit.HOUR +
+            (this.day - 1) * TimeUnit.DAY +
+            (this.month - 1) * TimeUnit.MONTH +
+            (this.year - 1) * TimeUnit.YEAR;
+    }
+
+    public setHour(hour: number) {
+        this.hour = hour;
+        return this;
+    }
+
+    public setMinute(minute: number) {
+        this.minute = minute;
+        return this;
+    }
+
+    /**
+     * 计算距离当前艾欧泽亚时间最近的下一个地球时间。
+     */
+    public toNextEarthTime(): Date {
+        const second = this.second;
+        this.second = 0;
+        const timeNum = this.getTime() * 175 / 3600 * 1000;
+        this.second = second;
+        const time = new Date(timeNum);
+        const now = new Date();
+        const DAY = 24 * 60 * 175 / 3600;
+        while(time < now) time.setMinutes(time.getMinutes() + DAY);
+        return time;
+    }
 }
 
 export enum TimeUnit {
