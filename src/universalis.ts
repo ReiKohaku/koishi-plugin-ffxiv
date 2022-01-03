@@ -11,6 +11,13 @@ export function apply(ctx: Context) {
         .shortcut("猫区物价", { fuzzy: true, options: { s: "猫小胖" } })
         .action(async({ session, options }, name: string) => {
             if (!name || !name.length) return "请输入要查询物价的物品名称！";
+            /*
+                koishi v3特性：自动进行繁转简
+                导致问题：“猛”会转为“勐”，导致查询失败
+                目前先使用特判解决此问题
+             */
+            name.replace("勐", "猛");
+
             const isGroupMsg: boolean = session.subtype === "group";
             try {
                 if (name.toLowerCase().endsWith("hq")) {
