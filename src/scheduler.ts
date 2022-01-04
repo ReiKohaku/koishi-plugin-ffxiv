@@ -84,10 +84,12 @@ function setupAlarm() {
     timer = setTimeout(() => {
         nextArray.forEach(v => {
             v.action(v.data as Alarm);
-            for (const i in alarms) {
-                if (i === v.id) {
-                    delete alarms[i];
-                    break;
+            if (!v.repeat) {
+                for (const i in alarms) {
+                    if (i === v.id) {
+                        delete alarms[i];
+                        break;
+                    }
                 }
             }
         });

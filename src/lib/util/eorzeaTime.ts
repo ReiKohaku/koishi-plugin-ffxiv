@@ -56,7 +56,7 @@ export class EorzeaTime {
         const time = new Date(timeNum);
         const now = new Date();
         const DAY = 24 * 60 * 175 / 3600;
-        while(time < now) time.setMinutes(time.getMinutes() + DAY);
+        while(time <= now) time.setMinutes(time.getMinutes() + DAY);
         return time;
     }
 }
