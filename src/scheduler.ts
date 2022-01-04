@@ -56,16 +56,16 @@ function setupAlarm() {
     const userAlarms: (Alarm & { id: string, uid: string, action: (alarm: Alarm) => any })[] = [];
     for (const id in alarms) userAlarms.push({ ...alarms[id], id });
     if (!userAlarms.length) return;
+    const now: Date = new Date();
     const mappedAlarms = userAlarms.map(a => {
         let time;
-        const now = new Date();
         if (a.type === AlarmType.LOCAL) {
             const targetTime = new Date(`${now.toDateString()}T${insertStr(prefixNum(a.time, 4), 2, ":")}:00`);
             if (targetTime < now) targetTime.setDate(targetTime.getDate() + 1);
             targetTime.setMinutes(targetTime.getMinutes() - a.advance);
             time = targetTime;
         } else if (a.type === AlarmType.SERVER) {
-            const targetTime = new Date(`Z${now.getUTCFullYear()}-${prefixNum(now.getUTCMonth() + 1)}-${prefixNum(now.getUTCDate())}T${insertStr(prefixNum(a.time, 4), 2, ":")}:00`);
+            const targetTime = new Date(`${now.getUTCFullYear()}-${prefixNum(now.getUTCMonth() + 1)}-${prefixNum(now.getUTCDate())}T${insertStr(prefixNum(a.time, 4), 2, ":")}:00Z`);
             if (targetTime < now) targetTime.setDate(targetTime.getDate() + 1);
             targetTime.setMinutes(targetTime.getMinutes() - a.advance);
             time = targetTime;
@@ -94,7 +94,7 @@ function setupAlarm() {
             }
         });
         setupAlarm();
-    }, nextTime - new Date().getTime());
+    }, nextTime - now.getTime());
 }
 
 export function apply(ctx: Context) {
