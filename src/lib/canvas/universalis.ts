@@ -4,6 +4,7 @@ import {__root_dir} from "../../index";
 import * as path from "path";
 
 if (!FontLibrary.has("Georgia")) FontLibrary.use("Georgia", path.join(__root_dir, "/public/fonts/Georgia.ttf"));
+if (!FontLibrary.has("WenquanyiZhengHei")) FontLibrary.use("WenquanyiZhengHei", path.join(__root_dir, "/public/fonts/WenquanyiZhengHei.ttf"));
 
 function getRarityColor(rarity: number) {
     switch (rarity) {
@@ -75,7 +76,7 @@ export async function drawItemPriceList(itemInfo: {
     const itemName = itemInfo.Name;
     const itemNameFontSize = 28;
     ctx.fillStyle = getRarityColor(itemInfo.Rarity);
-    ctx.font = `${itemNameFontSize}px Georgia,simhei,Sans`;
+    ctx.font = `${itemNameFontSize}px Georgia,WenquanyiZhengHei,simhei,Sans`;
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
     ctx.fillText(itemName,
@@ -89,7 +90,7 @@ export async function drawItemPriceList(itemInfo: {
     ctx.save();
     const itemDesc = `${itemInfo.ItemKind.Name} | ${itemInfo.ItemSearchCategory.Name} | 品级${itemInfo.LevelItem}`
     ctx.fillStyle = "rgb(180, 180, 180)";
-    ctx.font = "18px Georgia,simhei,Sans";
+    ctx.font = "18px Georgia,WenquanyiZhengHei,simhei,Sans";
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
     ctx.fillText(itemDesc,
@@ -106,7 +107,7 @@ export async function drawItemPriceList(itemInfo: {
     ctx.save();
     const itemLastUpdateDesc = `${saleInfo.worldName || `${saleInfo.dcName}区`} | 最后更新于 ${new Date(saleInfo.lastUploadTime).toLocaleString()}`;
     ctx.fillStyle = "rgb(180, 180, 180)";
-    ctx.font = "14px Georgia,simhei,Sans";
+    ctx.font = "14px Georgia,WenquanyiZhengHei,simhei,Sans";
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
     ctx.fillText(itemLastUpdateDesc,
@@ -125,7 +126,7 @@ export async function drawItemPriceList(itemInfo: {
 
     ctx.save();
     ctx.fillStyle = "rgb(255, 255, 255)";
-    ctx.font = "12px Georgia,simhei,Sans";
+    ctx.font = "12px Georgia,WenquanyiZhengHei,simhei,Sans";
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
     ctx.textWrap = true;
@@ -135,7 +136,7 @@ export async function drawItemPriceList(itemInfo: {
 
     ctx.save();
     ctx.fillStyle = "rgb(255, 255, 255)";
-    ctx.font = "9px Georgia,Sans";
+    ctx.font = "9px Georgia,WenquanyiZhengHei,Sans";
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
     ctx.textWrap = false;
@@ -210,7 +211,7 @@ export async function drawItemPriceList(itemInfo: {
         "本插件作者（或开发团体）与cafemaker、universalis和《最终幻想14》的开发与发行公司无任何直接联系。\n" +
         "作者（或开发团体）不对您使用本功能带来的一切可能的后果承担任何责任。"
     ctx.fillStyle = "rgb(192, 192, 192)";
-    ctx.font = "10px Georgia,simhei,Sans";
+    ctx.font = "10px Georgia,WenquanyiZhengHei,simhei,Sans";
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
     ctx.textWrap = true;
@@ -240,7 +241,7 @@ export async function drawItemPriceList(itemInfo: {
         let drawPosLeft = left + duration;
         let drawPosTop = currentItemTop + duration;
         ctx.fillStyle = "rgb(255, 255, 255)";
-        ctx.font = "16px Georgia,simhei,Sans";
+        ctx.font = "16px Georgia,WenquanyiZhengHei,simhei,Sans";
         ctx.textAlign = "left";
         ctx.textBaseline = "top";
         const itemPerPriceText = `${item.pricePerUnit}Gil/个`;
@@ -273,7 +274,7 @@ export async function drawItemPriceList(itemInfo: {
         drawPosTop = currentItemTop + itemPerPriceTextHeight + duration;
 
         ctx.fillStyle = "rgb(192, 192, 192)";
-        ctx.font = "14px Georgia,simhei,Sans";
+        ctx.font = "14px Georgia,WenquanyiZhengHei,simhei,Sans";
         ctx.fillText(`${item.worldName ? `${item.worldName}` : ""} | ${item.retainerName} | 信息上传于${new Date(item.lastReviewTime * 1000).toLocaleString()}`, drawPosLeft, drawPosTop)
 
         ctx.restore();
