@@ -9,6 +9,7 @@ export function apply(ctx: Context) {
         .shortcut("鸟区物价", { fuzzy: true, options: { s: "陆行鸟" } })
         .shortcut("猪区物价", { fuzzy: true, options: { s: "莫古力" } })
         .shortcut("猫区物价", { fuzzy: true, options: { s: "猫小胖" } })
+        .shortcut("狗区物价", { fuzzy: true, options: { s: "豆豆柴" } })
         .action(async({ session, options }, name: string) => {
             if (!name || !name.length) return "请输入要查询物价的物品名称！";
             /*
