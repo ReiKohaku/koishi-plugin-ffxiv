@@ -1,4 +1,4 @@
-import Axios, {AxiosPromise, AxiosResponse} from "axios";
+import Axios, {AxiosResponse} from "axios";
 const axios = Axios.create({});
 
 export interface ItemBase {
@@ -73,7 +73,7 @@ interface CurrentlyShownResponse {
         sellerID: string
         total: number
         worldID?: number
-        worldName?: number
+        worldName?: string
     }[]
     maxPrice: number
     maxPriceHQ: number
