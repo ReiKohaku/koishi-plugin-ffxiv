@@ -1,5 +1,6 @@
 import {Context, segment} from "koishi-core";
 import {getMarketCurrentlyShown, ItemBase, searchItem} from "./lib/API/universalis";
+import {drawItemPriceList} from "./lib/canvas/universalis";
 
 export function apply(ctx: Context) {
     ctx.command("ffxiv.market <name:string>")
@@ -17,7 +18,7 @@ export function apply(ctx: Context) {
                 导致问题：“猛”会转为“勐”，导致查询失败
                 目前先使用特判解决此问题
              */
-            name.replace("勐", "猛");
+            name = name.replace("勐", "猛");
 
             const isGroupMsg: boolean = session.subtype === "group";
             try {
@@ -55,6 +56,9 @@ export function apply(ctx: Context) {
                 }
 
                 const saleInfo = await getMarketCurrentlyShown(options.s || "莫古力", item.ID, { hq: options.hq ? 1 : undefined });
+                const listImg: Buffer = await drawItemPriceList(item, saleInfo);
+                return segment("image", { url: "base64://" + listImg.toString("base64") });
+                /*
                 return (isGroupMsg ? "" : `${segment("image", {url: `https://cafemaker.wakingsands.com${item.Icon}`})}\r`) +
                     `[${item.LevelItem}]${item.Name}` +
                     `在${saleInfo.worldName || `${saleInfo.dcName}区`}的售卖信息：\r` +
@@ -63,6 +67,7 @@ export function apply(ctx: Context) {
                     `最低NQ/HQ价格：${saleInfo.minPriceNQ}/${saleInfo.minPriceHQ}\r` +
                     `正售卖的前${Math.min(saleInfo.listings.length, limit)}组商品信息：\r` +
                     saleInfo.listings.slice(0, limit).map(item => `${item.worldName ? `[${item.worldName}]` : ""}${item.hq ? "[HQ]" : ""}${item.quantity}个×${item.pricePerUnit}金＝${item.total}金`).join("\r");
+                 */
             } catch (e) {
                 console.error(e);
                 return "查询失败，错误信息：\r" + e;

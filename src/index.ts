@@ -2,6 +2,7 @@ import {Context} from "koishi-core";
 
 import * as universalis from "./universalis";
 import * as scheduler from "./scheduler";
+import * as path from "path";
 
 export interface Config {}
 
@@ -18,3 +19,4 @@ export function apply(ctx: Context, options: Config = {}) {
 }
 
 export const name = "ffxiv";
+export const __root_dir = path.join(__dirname, "../");
