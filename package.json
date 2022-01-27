@@ -13,7 +13,8 @@
     "README.md",
     "package.json",
     "tsconfig.json",
-    "build"
+    "build",
+    "public"
   ],
   "dependencies": {
     "axios": "^0.24.0",
