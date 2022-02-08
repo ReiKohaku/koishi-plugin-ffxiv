@@ -1,6 +1,6 @@
 import Axios, {AxiosResponse} from "axios";
 const axios = Axios.create({
-    baseURL: "https://whw.wds-dsa.com/"
+    baseURL: "https://wanahome.ffxiv.bingyin.org/"
 });
 
 /**
