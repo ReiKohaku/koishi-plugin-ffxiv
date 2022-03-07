@@ -105,7 +105,7 @@ export async function drawItemPriceList(itemInfo: {
 
     /* 写物品最后更新信息 */
     ctx.save();
-    const itemLastUpdateDesc = `${saleInfo.worldName || `${saleInfo.dcName}区`} | 最后更新于 ${new Date(saleInfo.lastUploadTime).toLocaleString()}`;
+    const itemLastUpdateDesc = `${saleInfo.worldName || `${saleInfo.dcName}区`} | 最后更新于 ${new Date(saleInfo.lastUploadTime).toLocaleString("chinese", { hour12: false })}`;
     ctx.fillStyle = "rgb(180, 180, 180)";
     ctx.font = "14px Georgia,WenquanyiZhengHei,simhei,Sans";
     ctx.textAlign = "left";
@@ -205,7 +205,7 @@ export async function drawItemPriceList(itemInfo: {
     /* 写版权信息 */
     ctx.save();
     const announcement =
-        `图片生成于${new Date().toLocaleString()}，物品数据来源于cafemaker，价格数据来源于universalis，\n` +
+        `图片生成于${new Date().toLocaleString("chinese", { hour12: false })}，物品数据来源于cafemaker，价格数据来源于universalis，\n` +
         "本功能来自插件（koishi-plugin-ffxiv），该插件基于koishi v3开发，\n" +
         "插件开源于：https://github.com/ReiKohaku/koishi-plugin-ffxiv。\n" +
         "本插件作者（或开发团体）与cafemaker、universalis和《最终幻想14》的开发与发行公司无任何直接联系。\n" +
@@ -275,7 +275,7 @@ export async function drawItemPriceList(itemInfo: {
 
         ctx.fillStyle = "rgb(192, 192, 192)";
         ctx.font = "14px Georgia,WenquanyiZhengHei,simhei,Sans";
-        ctx.fillText(`${item.worldName ? `${item.worldName}` : ""} | ${item.retainerName} | 信息上传于${new Date(item.lastReviewTime * 1000).toLocaleString()}`, drawPosLeft, drawPosTop)
+        ctx.fillText(`${item.worldName ? `${item.worldName}` : ""} | ${item.retainerName} | 信息上传于${new Date(item.lastReviewTime * 1000).toLocaleString("chinese", { hour12: false })}`, drawPosLeft, drawPosTop)
 
         ctx.restore();
         currentItemTop += itemHeight + duration;
