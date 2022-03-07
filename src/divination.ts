@@ -9,7 +9,7 @@ export function apply(ctx: Context) {
         .usage("查看今日艾欧泽亚运势，仅供娱乐。")
         .action(async({ session }) => {
             const today = new Date();
-            const genStr = `${today.toLocaleDateString()}${session.userId}`;
+            const genStr = `${today.getTime()}${session.userId}`;
             const resultStr = crypto.createHash("sha256").update(genStr).digest("hex");
             let result = 0;
             for (const char of resultStr) result += parseInt(char, 16);
