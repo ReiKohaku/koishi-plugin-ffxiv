@@ -8,6 +8,7 @@
 * 查询板子物价（基于universalis的API）
 * 查询艾欧泽亚时间（ET）
 * 闹钟（仿照游戏内闹钟）
+* 扔骰子
 
 TODO：
 * 升级为Koishi v4插件

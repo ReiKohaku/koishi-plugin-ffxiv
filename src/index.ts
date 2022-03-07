@@ -6,6 +6,7 @@ import {Context} from "koishi-core";
 import * as universalis from "./universalis";
 import * as scheduler from "./scheduler";
 import * as iWanaHome from "./iWanaHome";
+import * as random from "./random";
 
 export interface Config {}
 
@@ -20,6 +21,7 @@ export function apply(ctx: Context, options: Config = {}) {
     ctx.plugin(universalis);
     ctx.plugin(scheduler);
     ctx.plugin(iWanaHome);
+    ctx.plugin(random);
 }
 
 export const name = "ffxiv";
