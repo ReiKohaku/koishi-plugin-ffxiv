@@ -181,7 +181,7 @@ export async function drawServerStatus(serverStatus: ServerStatus[]) {
             ctx.textAlign = "right";
             ctx.textBaseline = "middle";
             ctx.font = "18px simhei,Sans";
-            ctx.fillText("NEW", drawRight, lineMiddle);
+            if (group.isnew) ctx.fillText("NEW", drawRight, lineMiddle);
             ctx.restore();
         })
     });
