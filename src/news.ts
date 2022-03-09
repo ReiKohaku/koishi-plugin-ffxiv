@@ -29,8 +29,9 @@ export async function apply(ctx: Context) {
                 const content = news.items.slice(0, i)
                     .map(n =>
                         `${n.title}\r` +
-                        `${new Date(n.isoDate).toLocaleString("zh-CN", { hour12: false })}\r` +
-                        `${(n.contentSnippet.length >= 100) ? (n.contentSnippet.slice(0, 97) + "...") : n.contentSnippet}`)
+                        `[${new Date(n.isoDate).toLocaleString("zh-CN", { hour12: false })}]\r` +
+                        `${(n.contentSnippet.length >= 100) ? (n.contentSnippet.slice(0, 97) + "...") : n.contentSnippet}\r` +
+                        `${n.link}`)
                     .join("\r--------\r")
                 for (const group of broadcastList) {
                     await ctx.getBot(group.platform, group.selfId).sendMessage(group.channelId, content, group.groupId).catch(console.error);
