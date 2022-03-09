@@ -1,6 +1,7 @@
 import {Context, segment} from "koishi-core";
-import {getMarketCurrentlyShown, ItemBase, searchItem} from "./lib/API/universalis";
+import {getMarketCurrentlyShown} from "./lib/API/universalis";
 import {drawItemPriceList} from "./lib/canvas/universalis";
+import {ItemBase, searchItem} from "./lib/API/xivapi";
 
 const alias = {
     "g1": "陈旧的鞣革地图",
@@ -56,7 +57,15 @@ export function apply(ctx: Context) {
                 let searchPage = 1;
                 const itemList: ItemBase[] = [];
                 while (true) {
-                    const searchResult = await searchItem(name, { limit: 100, page: searchPage });
+                    const searchResult = await searchItem(name, {
+                        indexes: "item",
+                        filters: "ItemSearchCategory.ID>=1",
+                        columns: "ID,Icon,Name,LevelItem,Rarity,ItemSearchCategory.Name,ItemSearchCategory.ID,ItemKind.Name",
+                        limit: 100,
+                        page: searchPage,
+                        sort_field: "LevelItem",
+                        sort_order: "desc"
+                    });
                     if (!searchResult.Pagination.Results) return `没有找到名字中包含“${name}”的物品。`;
                     else itemList.push(...searchResult.Results);
                     if (!searchResult.Pagination.PageNext) break;

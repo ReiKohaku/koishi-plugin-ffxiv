@@ -1,50 +1,8 @@
 import Axios, {AxiosResponse} from "axios";
-const axios = Axios.create({});
 
-export interface ItemBase {
-    ID: number
-    Icon: string
-    ItemKind: {
-        Name: string
-    }
-    ItemSearchCategory: {
-        ID: number
-        Name: string
-    }
-    LevelItem: number
-    Name: string
-    Rarity: number
-}
-export interface SearchItemResponse {
-    Pagination: {
-        Page: number
-        PagePrev: number | null
-        PageNext: number | null
-        PageTotal: number
-        Results: number
-        ResultsPerPage: number,
-        ResultsTotal: number
-    }
-    Results: ItemBase[]
-}
-
-export async function searchItem(item: string, options: { limit?: number, page?: number } = {}): Promise<SearchItemResponse> {
-    const result: AxiosResponse<SearchItemResponse> = await axios({
-        method: "GET",
-        url: "https://cafemaker.wakingsands.com/search",
-        params: {
-            indexes: "item",
-            filters: "ItemSearchCategory.ID>=1",
-            columns: "ID,Icon,Name,LevelItem,Rarity,ItemSearchCategory.Name,ItemSearchCategory.ID,ItemKind.Name",
-            string: item,
-            limit: options.limit || 10,
-            page: options.page || undefined,
-            sort_field: "LevelItem",
-            sort_order: "desc"
-        }
-    });
-    return result.data;
-}
+const axios = Axios.create({
+    baseURL: "https://universalis.app/api/"
+});
 
 interface CurrentlyShownResponse {
     itemID: number
@@ -102,7 +60,7 @@ interface CurrentlyShownResponse {
 export async function getMarketCurrentlyShown(server: string, id: number, options: { listings?: string, entries?: number, noGst?: boolean, hq?: boolean | number, statsWithin?: number, entriesWithin?: number } = {}): Promise<CurrentlyShownResponse> {
     const result: AxiosResponse<CurrentlyShownResponse> = await axios({
         method: "GET",
-        url: encodeURI(`https://universalis.app/api/${server}/${id}`),
+        url: encodeURI(`/${server}/${id}`),
         params: options
     });
     return result.data;
