@@ -9,6 +9,7 @@ import * as iWanaHome from "./iWanaHome";
 import * as random from "./random";
 import * as divination from "./divination";
 import * as serverStatus from "./serverStatus";
+import * as news from "./news";
 
 export interface Config {}
 
@@ -25,7 +26,8 @@ export function apply(ctx: Context, options: Config = {}) {
     ctx.plugin(iWanaHome);
     ctx.plugin(random);
     ctx.plugin(divination);
-    ctx.plugin(serverStatus)
+    ctx.plugin(serverStatus);
+    ctx.plugin(news);
 }
 
 export const name = "ffxiv";
