@@ -1,5 +1,5 @@
 import {Context} from "koishi-core";
-import {rssFF14Sdo} from "./lib/rss/sdo";
+import {newsConfig, rssFF14Sdo} from "./lib/rss/sdo";
 import {
     addBroadcastInfo,
     BroadcastInfo,
@@ -42,9 +42,8 @@ export async function apply(ctx: Context) {
         } catch (e) {
             console.error(e);
         } finally {
-            const duration = 15 * 60 * 1000;
-            console.log(`[${new Date().toLocaleTimeString("zh-CN", { hour12: false })}] ${duration / 1000 / 60}分钟后将重新检查RSS源。`)
-            setTimeout(broadcastNews, duration);
+            console.log(`[${new Date().toLocaleTimeString("zh-CN", { hour12: false })}] ${Math.floor(newsConfig.duration / 1000 / 60)}分钟后将重新检查RSS源。`)
+            setTimeout(broadcastNews, newsConfig.duration);
         }
     }
     void broadcastNews();

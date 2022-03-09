@@ -1,5 +1,4 @@
 import path from "path";
-import {__root_dir} from "../../index";
 import fs from "fs";
 import {Platform} from "koishi-core";
 import {LevelDB} from "./index";
@@ -11,8 +10,8 @@ export interface BroadcastInfo {
     groupId?: string
 }
 
-if (!fs.existsSync(path.join(__root_dir, "/data"))) fs.mkdirSync(path.join(__root_dir, "/data"));
-const db = new LevelDB(path.join(__root_dir, "/data/news"));
+if (!fs.existsSync(path.join(process.cwd(), "/data"))) fs.mkdirSync(path.join(process.cwd(), "/data"));
+const db = new LevelDB(path.join(process.cwd(), "/data/news"));
 
 export async function getLastLoadRss(): Promise<Date | null> {
     const result = db.get<string>("last_load");
