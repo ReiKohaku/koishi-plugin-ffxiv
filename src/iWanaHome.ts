@@ -19,7 +19,7 @@ export function apply(ctx: Context) {
                            `在售时间最长的${Math.min(serverAllHouseInfo.onsale.length, 5)}条房屋信息：\r` +
                            serverAllHouseInfo.onsale.slice(0, 5).map(h => {
                                const houseLoc = `${territories[h.territory_id].short}${prefixNum(h.ward_id + 1, 2)}-${prefixNum(h.house_id + 1, 2)}`;
-                               return `${houseLoc} | ${h.price}Gil\r已空置${toCurrentTimeDifference(new Date(h.start_sell * 1000))}（${new Date(h.start_sell * 1000).toLocaleString("chinese", { hour12: false })}开始空置）`;
+                               return `${houseLoc} | ${h.price}Gil\r已空置${toCurrentTimeDifference(new Date(h.start_sell * 1000))}（${new Date(h.start_sell * 1000).toLocaleString("zh-CN", { hour12: false })}开始空置）`;
                            }).join("\r");
                 }
             }

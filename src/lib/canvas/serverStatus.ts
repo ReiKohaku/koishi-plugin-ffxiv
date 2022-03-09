@@ -189,7 +189,7 @@ export async function drawServerStatus(serverStatus: ServerStatus[]) {
     /* 声明区域 */
     ctx.save();
     const announcement =
-        `图片生成于${new Date().toLocaleString("chinese", { hour12: false })}，数据来源于盛趣官网（https://ff.web.sdo.com/）\n` +
+        `图片生成于${new Date().toLocaleString("zh-CN", { hour12: false })}，数据来源于盛趣官网（https://ff.web.sdo.com/）\n` +
         "本功能来自插件（koishi-plugin-ffxiv），该插件基于koishi v3开发，\n" +
         "插件开源于：https://github.com/ReiKohaku/koishi-plugin-ffxiv。\n" +
         "本插件作者（或开发团体）与盛趣无任何直接联系。\n" +
