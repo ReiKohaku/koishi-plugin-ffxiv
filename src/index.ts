@@ -8,6 +8,7 @@ import * as scheduler from "./scheduler";
 import * as iWanaHome from "./iWanaHome";
 import * as random from "./random";
 import * as divination from "./divination";
+import * as serverStatus from "./serverStatus";
 
 export interface Config {}
 
@@ -24,6 +25,7 @@ export function apply(ctx: Context, options: Config = {}) {
     ctx.plugin(iWanaHome);
     ctx.plugin(random);
     ctx.plugin(divination);
+    ctx.plugin(serverStatus)
 }
 
 export const name = "ffxiv";
