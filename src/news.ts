@@ -26,6 +26,7 @@ export async function apply(ctx: Context) {
             for (i = 0; i < news.items.length && new Date(news.items[i].isoDate).getTime() > lastLoadDate.getTime(); i++) {}
             if (!i) console.log(`[${new Date().toLocaleTimeString("zh-CN", { hour12: false })}] 没有任何推送内容。`);
             else {
+                await setLastLoadRss(new Date());
                 const content = news.items.slice(0, i)
                     .map(n =>
                         `${n.title}\r` +
@@ -38,7 +39,6 @@ export async function apply(ctx: Context) {
                 }
                 console.log(`[${new Date().toLocaleTimeString("zh-CN", { hour12: false })}] 已推送消息至${broadcastList.length}个会话。`)
             }
-            await setLastLoadRss(new Date());
         } catch (e) {
             console.error(e);
         } finally {
