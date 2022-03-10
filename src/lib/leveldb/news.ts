@@ -14,8 +14,12 @@ if (!fs.existsSync(path.join(process.cwd(), "/data"))) fs.mkdirSync(path.join(pr
 const db = new LevelDB(path.join(process.cwd(), "/data/news"));
 
 export async function getLastLoadRss(): Promise<Date | null> {
-    const result = db.get<string>("last_load");
-    return (typeof result === "string") ? new Date(result) : null;
+    const result = await db.get<string>("last_load");
+    try {
+        return result ? new Date(result.toString()) : null;
+    } catch {
+        return null;
+    }
 }
 
 export async function setLastLoadRss(date: Date | string | number): Promise<void> {
@@ -60,5 +64,5 @@ export async function removeBroadcastInfo(info: BroadcastInfo): Promise<void> {
         list.splice(i, 1);
         i = broadcastInfoIndex(list, info);
     }
-    await db.put("broadcast", list);
+    await db.put("broadcast", JSON.stringify(list));
 }

@@ -16,12 +16,11 @@ export async function apply(ctx: Context) {
         try {
             console.log(`[${new Date().toLocaleTimeString("zh-CN", { hour12: false })}] 正在检查国服官网RSS源……`);
             const news = await rssFF14Sdo();
-            const lastLoadDate = await (async () => {
-                const result = await getLastLoadRss();
-                if (result) return result;
-                await setLastLoadRss(new Date());
-                return new Date();
-            })()
+            let lastLoadDate = await getLastLoadRss();
+            if (!lastLoadDate) {
+                await setLastLoadRss(new Date().toISOString());
+                lastLoadDate = new Date();
+            }
             news.items.sort((a, b) => new Date(b.isoDate).getTime() - new Date(a.isoDate).getTime());
             if (news.items.length)
                 console.log(`[${new Date().toLocaleTimeString("zh-CN", { hour12: false })}] 国服官网最新的文章发布于${new Date(news.items[0].isoDate).toLocaleString("zh-CN", { hour12: false })}。`)
@@ -31,7 +30,7 @@ export async function apply(ctx: Context) {
             for (i = 0; i < news.items.length && new Date(news.items[i].isoDate).getTime() > lastLoadDate.getTime(); i++) {}
             if (!i) console.log(`[${new Date().toLocaleTimeString("zh-CN", { hour12: false })}] 没有任何推送内容。`);
             else {
-                await setLastLoadRss(new Date());
+                await setLastLoadRss(new Date(news.items[0].isoDate));
                 const content = news.items.slice(0, i)
                     .map(n =>
                         `${n.title}\r` +
