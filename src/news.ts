@@ -16,7 +16,12 @@ export async function apply(ctx: Context) {
         try {
             console.log(`[${new Date().toLocaleTimeString("zh-CN", { hour12: false })}] 正在检查国服官网RSS源……`);
             const news = await rssFF14Sdo();
-            const lastLoadDate = await getLastLoadRss() || new Date();
+            const lastLoadDate = await (async () => {
+                const result = await getLastLoadRss();
+                if (result) return result;
+                await setLastLoadRss(new Date());
+                return new Date();
+            })()
             news.items.sort((a, b) => new Date(b.isoDate).getTime() - new Date(a.isoDate).getTime());
             if (news.items.length)
                 console.log(`[${new Date().toLocaleTimeString("zh-CN", { hour12: false })}] 国服官网最新的文章发布于${new Date(news.items[0].isoDate).toLocaleString("zh-CN", { hour12: false })}。`)
