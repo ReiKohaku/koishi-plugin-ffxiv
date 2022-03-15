@@ -2,20 +2,10 @@ import {Canvas, loadImage, FontLibrary} from "skia-canvas";
 import {drawLegends} from "./Util";
 import {__root_dir} from "../../index";
 import * as path from "path";
+import getRarityColor from "../util/getRarityColor";
 
 if (!FontLibrary.has("Georgia")) FontLibrary.use("Georgia", path.join(__root_dir, "/public/fonts/Georgia.ttf"));
 if (!FontLibrary.has("WenquanyiZhengHei")) FontLibrary.use("WenquanyiZhengHei", path.join(__root_dir, "/public/fonts/WenquanyiZhengHei.ttf"));
-
-function getRarityColor(rarity: number) {
-    switch (rarity) {
-        case 2:
-            return "rgb(72, 212, 72)";
-        case 3:
-            return "rgb(72, 72, 212)";
-        default:
-            return "rgb(255, 255, 255)";
-    }
-}
 
 export async function drawItemPriceList(itemInfo: {
     Name: string,

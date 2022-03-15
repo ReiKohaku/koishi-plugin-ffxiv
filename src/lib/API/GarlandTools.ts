@@ -5,6 +5,64 @@ const axios = Axios.create({
 });
 
 export interface Data {
+    item: {
+        categoryIndex: {
+            [key: number]: {
+                id: number
+                name: string
+                attr?: string
+            }
+        }
+        ingredients: {
+            [key: number]: {
+                id: number
+                name: string
+                icon: number
+                category: number
+                ilvl: number
+                price: number
+                drops: number[]
+                seeds: number[]
+                instances: number[]
+                nodes: number[]
+                tradeShops: {
+                    shop: string
+                    npcs: number[]
+                    listings: {
+                        currency: { id: string, amount: number }[]
+                        item: { id: string, amount: number }[]
+                    }[]
+                }[]
+                treasure: number[]
+                ventures: number[]
+            }
+        }
+    }
+    jobCategories: {
+        id: number
+        name: string
+        jobs: number[]
+    }[]
+    jobs: {
+        id: number
+        name: string
+        abbreviation: string
+        category: string
+        startingLevel: number
+    }[]
+    locationIndex: {
+        [key: number]: {
+            id: number
+            name: string
+            parentId: number
+            size: number
+            chs: { name: string }
+            de: { name: string }
+            ja: { name: string }
+            en: { name: string }
+            fr: { name: string }
+        }
+    }
     patch: {
         categoryIndex: Record<string, string>
         current: string
@@ -25,6 +83,21 @@ export interface Data {
             section: string
         }
     }
+    ventureIndex: {
+        [key: number]: {
+            id: number
+            name?: string
+            jobs: number
+            lvl: number
+            cost: number
+            minutes: number
+            ilvl?: number[]
+            gathering?: number[]
+            amounts?: number[]
+            random?: number
+        }
+    }
+    xp: number[]
 }
 
 const dataCache: {
@@ -34,6 +107,7 @@ const dataCache: {
     time: null,
     cache: null
 }
+
 export async function getData(useCache: boolean = true, refreshDuration: number = 2 * 60 * 60 * 1000): Promise<Data> {
     if (!dataCache.time || !dataCache.cache || new Date().getTime() - dataCache.time.getTime() > refreshDuration) {
         const result: AxiosResponse<Data> = await axios.request<Data>({
@@ -93,13 +167,13 @@ export interface GatherNode {
     zoneid: number
 }
 
-interface Partial {
+export interface Partial {
     id: string
     type: string
-    obj: Record<string, string | number>
+    obj: Record<string, string | number | Record<any, any> | Array<any>>
 }
 
-interface PartialItem extends Partial {
+export interface PartialItem extends Partial {
     id: string
     obj: {
         i: number // ID
@@ -111,13 +185,18 @@ interface PartialItem extends Partial {
     type: "item"
 }
 
-interface PartialNpc extends Partial {
+export interface PartialNpc extends Partial {
     id: string
     obj: {
         i: number // ID
-        l: number // 所在区域ID
+        c?: [number, number] // 坐标
+        l: number // 所在地图ID
         n: string // NPC名
         q: number
+        a: number // 所在区域ID
+        r?: number
+        s?: number
+        t?: string // NPC类型（名字下面的）
     }
     type: "npc"
 }
@@ -191,6 +270,88 @@ export async function getQuest(id: number): Promise<{ quest: Quest, partials: Pa
     const result: AxiosResponse<{ quest: Quest, partials: Partial[] }> = await axios.request<{ quest: Quest, partials: Partial[] }>({
         method: "GET",
         url: `/db/doc/quest/chs/2/${id}.json`
+    });
+    return result.data;
+}
+
+export interface Item {
+    id: number
+    name: string
+    description: string
+    icon: number
+    ilvl: number
+    elvl?: number // 装备等级
+    jobCategories?: string // 可装备职业分类
+    jobs?: number // 可装备职业
+    equip?: number
+    glamourous?: number // 是否可幻影化
+    convertable?: number // 是否可魔晶石化
+    dyeable?: number // 是否可染色
+    unlistable?: number // 是否不可出售
+    slot?: number
+    rarity: number
+    price?: number
+    sell_price: number
+    stackSize: number
+    category: number
+    patch: number
+    patchCategory: number
+    tradeable?: number
+    nodes?: number[]
+    ventures?: number[]
+    craft?: {
+        id: number
+        rlvl: number
+        job: number
+        lvl: number
+        progress: number
+        quality: number
+        durability: number
+        complexity: { nq: number, hq: number }
+        materialQualityFactor: number
+        quickSynth?: number
+        hq?: number
+        ingredients: { id: number, amount: number }[]
+        suggestedControl: number
+        suggestedCraftsmanship: number
+    }[]
+    ingredient_of?: {
+        [key: number]: number
+    }
+    tradeShops?: {
+        shop: string
+        npcs: number[]
+        listings: {
+            item: { id: string, amount: number, hq?: number }[]
+            currency: { id: string, amount: number, hq?: number }[]
+        }[]
+    }[]
+    tradeCurrency?: {
+        shop: string
+        npcs: number[]
+        listings: {
+            item: { id: string, amount: number, hq?: number }[]
+            currency: { id: string, amount: number, hq?: number }[]
+        }[]
+    }
+    vendors?: number[]
+    quests: number[]
+    repair?: number
+    repair_item?: number
+    sharedModels?: number[]
+    sockets: number
+}
+
+export interface ItemInfo {
+    item: Item
+    partials: Partial[]
+    ingredients?: Item[]
+}
+
+export async function getItem(id: number): Promise<ItemInfo> {
+    const result: AxiosResponse<ItemInfo> = await axios.request<ItemInfo>({
+        method: "GET",
+        url: `/db/doc/item/chs/3/${id}.json`
     });
     return result.data;
 }

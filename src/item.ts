@@ -1,34 +1,21 @@
 import {Context, segment} from "koishi-core";
-import {getMarketCurrentlyShown} from "./lib/API/universalis";
-import {drawItemPriceList} from "./lib/canvas/universalis";
 import {ItemBase, searchItem} from "./lib/API/xivapi";
 import {itemAlias} from "./lib/util/alias";
+import {getData, getItem} from "./lib/API/GarlandTools";
+import {drawItemInfo} from "./lib/canvas/item";
+import {wrapReply} from "./lib/util/message";
 
 export function apply(ctx: Context) {
-    ctx.command("ffxiv.market <name:string>")
-        .alias("物价查询")
-        .option("hq", "--hq 携带此参数时只查询HQ结果。")
-        .option("s", "--server <serverOrDc:string> 指定要查询的服务器或大区，默认为“莫古力”。")
-        .shortcut("鸟区物价", { fuzzy: true, options: { s: "陆行鸟" } })
-        .shortcut("猪区物价", { fuzzy: true, options: { s: "莫古力" } })
-        .shortcut("猫区物价", { fuzzy: true, options: { s: "猫小胖" } })
-        .shortcut("狗区物价", { fuzzy: true, options: { s: "豆豆柴" } })
-        .action(async({ session, options }, name: string) => {
+    ctx.command("ffxiv.item <name:text>")
+        .alias("艾欧泽亚图鉴")
+        .alias("物品查询")
+        .alias("查询物品")
+        .action(async ({ session }, name) => {
             if (!name || !name.length) return "请输入要查询物价的物品名称！";
-            /*
-                koishi v3特性：自动进行繁转简
-                导致问题：“猛”会转为“勐”，导致查询失败
-                目前先使用特判解决此问题
-             */
             name = name.replace("勐", "猛");
 
             const isGroupMsg: boolean = session.subtype === "group";
             try {
-                if (name.toLowerCase().endsWith("hq")) {
-                    name = name.slice(0, name.length - 2);
-                    options.hq = true;
-                }
-                /* 特性：允许部分商品使用简称 */
                 for (const alia in itemAlias) {
                     if (new RegExp(`^${alia}$`, "iu").test(name)) {
                         name = itemAlias[alia];
@@ -43,9 +30,6 @@ export function apply(ctx: Context) {
                 const itemList: ItemBase[] = [];
                 while (true) {
                     const searchResult = await searchItem(name, {
-                        indexes: "item",
-                        filters: "ItemSearchCategory.ID>=1",
-                        columns: "ID,Icon,Name,LevelItem,Rarity,ItemSearchCategory.Name,ItemSearchCategory.ID,ItemKind.Name",
                         limit: 100,
                         page: searchPage,
                         sort_field: "LevelItem",
@@ -93,19 +77,15 @@ export function apply(ctx: Context) {
                     } else item = itemList[0];
                 }
 
-                const saleInfo = await getMarketCurrentlyShown(options.s || "莫古力", item.ID, { hq: options.hq ? 1 : undefined });
-                const listImg: Buffer = await drawItemPriceList(item, saleInfo);
-                return segment("image", { url: "base64://" + listImg.toString("base64") });
-                /*
-                return (isGroupMsg ? "" : `${segment("image", {url: `https://cafemaker.wakingsands.com${item.Icon}`})}\r`) +
-                    `[${item.LevelItem}]${item.Name}` +
-                    `在${saleInfo.worldName || `${saleInfo.dcName}区`}的售卖信息：\r` +
-                    `最后更新于 ${new Date(saleInfo.lastUploadTime).toLocaleString()}\r` +
-                    `最高NQ/HQ价格：${saleInfo.maxPriceNQ}/${saleInfo.maxPriceHQ}\r` +
-                    `最低NQ/HQ价格：${saleInfo.minPriceNQ}/${saleInfo.minPriceHQ}\r` +
-                    `正售卖的前${Math.min(saleInfo.listings.length, limit)}组商品信息：\r` +
-                    saleInfo.listings.slice(0, limit).map(item => `${item.worldName ? `[${item.worldName}]` : ""}${item.hq ? "[HQ]" : ""}${item.quantity}个×${item.pricePerUnit}金＝${item.total}金`).join("\r");
-                 */
+                const timer = setTimeout(() => {
+                    session.send(wrapReply(session, "由于数据量较大，生成需要一段时间，请耐心等待……"));
+                }, 5000);
+                const itemInfo = await getItem(item.ID);
+                const data = await getData();
+                const image = await drawItemInfo(itemInfo, data);
+                clearTimeout(timer);
+                return segment("image", { url: "base64://" + image.toString("base64") })
+
             } catch (e) {
                 console.error(e);
                 return "查询失败，错误信息：\r" + e;

@@ -11,6 +11,7 @@ import * as divination from "./divination";
 import * as serverStatus from "./serverStatus";
 import * as news from "./news";
 import * as quest from "./quest"
+import * as item from "./item"
 
 export interface Config {}
 
@@ -30,6 +31,7 @@ export function apply(ctx: Context, options: Config = {}) {
     ctx.plugin(serverStatus);
     ctx.plugin(news);
     ctx.plugin(quest);
+    ctx.plugin(item);
 }
 
 export const name = "ffxiv";

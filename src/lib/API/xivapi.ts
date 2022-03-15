@@ -54,14 +54,8 @@ export async function searchItem(item: string, options: {
         baseURL: (locale === "zh") ? "https://cafemaker.wakingsands.com/" : "https://xivapi.com/",
         url: `/search`,
         params: {
-            indexes,
-            filters,
-            columns,
-            string: item,
-            limit,
-            page,
-            sort_field,
-            sort_order
+            ...options,
+            string: item
         }
     });
     return result.data;
