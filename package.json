@@ -22,7 +22,7 @@
     "leveldown": "^6.1.0",
     "levelup": "^5.1.1",
     "rss-parser": "^3.12.0",
-    "skia-canvas": "^0.9.28"
+    "skia-canvas": "^0.9.29"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
