@@ -1,6 +1,6 @@
 {
   "name": "koishi-plugin-ffxiv",
-  "version": "1.5.6",
+  "version": "1.6.0",
   "description": "A Final Fantasy XIV helper plugin for koishi",
   "private": false,
   "main": "build/index.js",
