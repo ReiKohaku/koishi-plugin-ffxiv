@@ -180,6 +180,7 @@ export async function drawItemInfo(itemInfo: ItemInfo, data: Data) {
                     ctx.fillText(ingredientName, drawPos[0], drawPos[1] + ingredientNameHeight / 2);
                     drawPos[0] += ingredientNameMeasure.width + duration;
                     drawPos[1] += ingredientNameHeight + duration;
+                    ctx.restore();
                 }
             }
             drawPos[1] += duration;
@@ -612,9 +613,11 @@ export async function drawItemInfo(itemInfo: ItemInfo, data: Data) {
 
     // 绘制背景
     {
-        ctx.globalCompositeOperation = 'destination-over'
-        ctx.fillStyle = '#182927'
+        ctx.save();
+        ctx.globalCompositeOperation = "destination-over";
+        ctx.fillStyle = "#182927";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.restore();
     }
 
     return canvas.toBuffer("png");
