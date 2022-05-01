@@ -3,6 +3,7 @@ import {drawLegends} from "./Util";
 import {__root_dir} from "../../index";
 import * as path from "path";
 import getRarityColor from "../util/getRarityColor";
+import {toCurrentTimeDifference} from "../util/format";
 
 if (!FontLibrary.has("Georgia")) FontLibrary.use("Georgia", path.join(__root_dir, "/public/fonts/Georgia.ttf"));
 if (!FontLibrary.has("WenquanyiZhengHei")) FontLibrary.use("WenquanyiZhengHei", path.join(__root_dir, "/public/fonts/WenquanyiZhengHei.ttf"));
@@ -101,7 +102,7 @@ export async function drawItemPriceList(itemInfo: {
 
     /* 写物品最后更新信息 */
     ctx.save();
-    const itemLastUpdateDesc = `${saleInfo.worldName || `${saleInfo.dcName}区`} | 最后更新于 ${new Date(saleInfo.lastUploadTime).toLocaleString("zh-CN", { hour12: false })}`;
+    const itemLastUpdateDesc = `${saleInfo.worldName || `${saleInfo.dcName}区`} | 最后更新于${toCurrentTimeDifference(new Date(saleInfo.lastUploadTime), true)}（${new Date(saleInfo.lastUploadTime).toLocaleString("zh-CN", { hour12: false })}）`;
     ctx.fillStyle = "rgb(180, 180, 180)";
     ctx.font = "14px Georgia,WenquanyiZhengHei,simhei,Sans";
     ctx.textAlign = "left";
@@ -271,7 +272,7 @@ export async function drawItemPriceList(itemInfo: {
 
         ctx.fillStyle = "rgb(192, 192, 192)";
         ctx.font = "14px Georgia,WenquanyiZhengHei,simhei,Sans";
-        ctx.fillText(`${item.worldName ? `${item.worldName}` : ""} | ${item.retainerName} | 信息上传于${new Date(item.lastReviewTime * 1000).toLocaleString("zh-CN", { hour12: false })}`, drawPosLeft, drawPosTop)
+        ctx.fillText(`${item.worldName ? `${item.worldName}` : ""} | ${item.retainerName} | 信息上传于${toCurrentTimeDifference(new Date(item.lastReviewTime * 1000), true)}（${new Date(item.lastReviewTime * 1000).toLocaleString("zh-CN", { hour12: false })}）`, drawPosLeft, drawPosTop)
 
         ctx.restore();
         currentItemTop += itemHeight + duration;
