@@ -1,6 +1,6 @@
 import {Context, segment} from "koishi-core";
 import {ItemBase, searchItem} from "./lib/API/xivapi";
-import {itemAlias} from "./lib/util/alias";
+import itemAlias from "./lib/util/alias";
 import {getData, getItem} from "./lib/API/GarlandTools";
 import {drawItemInfo} from "./lib/canvas/item";
 import {wrapReply} from "./lib/util/message";
@@ -16,12 +16,7 @@ export function apply(ctx: Context) {
 
             const isGroupMsg: boolean = session.subtype === "group";
             try {
-                for (const alia in itemAlias) {
-                    if (new RegExp(`^${alia}$`, "iu").test(name)) {
-                        name = itemAlias[alia];
-                        break;
-                    }
-                }
+                name = itemAlias.findItemName(name);
                 const limit = isGroupMsg ? 5 : 10;
                 let item: ItemBase, page: number = 1;
 
@@ -82,7 +77,8 @@ export function apply(ctx: Context) {
                 }, 5000);
                 const itemInfo = await getItem(item.ID);
                 const data = await getData();
-                const image = await drawItemInfo(itemInfo, data);
+                await drawItemInfo(itemInfo, data);
+                const image = await drawItemInfo(itemInfo, data, true);
                 clearTimeout(timer);
                 return segment("image", { url: "base64://" + image.toString("base64") })
 

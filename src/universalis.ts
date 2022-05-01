@@ -2,7 +2,7 @@ import {Context, segment} from "koishi-core";
 import {getMarketCurrentlyShown} from "./lib/API/universalis";
 import {drawItemPriceList} from "./lib/canvas/universalis";
 import {ItemBase, searchItem} from "./lib/API/xivapi";
-import {itemAlias} from "./lib/util/alias";
+import itemAlias from "./lib/util/alias";
 
 export function apply(ctx: Context) {
     ctx.command("ffxiv.market <name:string>")
@@ -29,12 +29,7 @@ export function apply(ctx: Context) {
                     options.hq = true;
                 }
                 /* 特性：允许部分商品使用简称 */
-                for (const alia in itemAlias) {
-                    if (new RegExp(`^${alia}$`, "iu").test(name)) {
-                        name = itemAlias[alia];
-                        break;
-                    }
-                }
+                name = itemAlias.findItemName(name);
                 const limit = isGroupMsg ? 5 : 10;
                 let item: ItemBase, page: number = 1;
 
