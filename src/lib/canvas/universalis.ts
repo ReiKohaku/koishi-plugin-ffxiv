@@ -57,9 +57,15 @@ export async function drawItemPriceList(itemInfo: {
     ctx.restore();
 
     /* 画物品图标 */
-    const itemImage = await loadImage(`https://cafemaker.wakingsands.com${itemInfo.Icon}`);
+    const iconUrl = `https://cafemaker.wakingsands.com${itemInfo.Icon}`;
     const iconSide = 64;
-    ctx.drawImage(itemImage, left, top, iconSide, iconSide);
+    try {
+        const itemImage = await loadImage(iconUrl);
+        ctx.drawImage(itemImage, left, top, iconSide, iconSide);
+    } catch (e) {
+        console.warn(`Caution: Load image from ${iconUrl} failed.`);
+        console.warn(e);
+    }
 
     /* 写物品名 */
     ctx.save();
