@@ -305,7 +305,6 @@ export async function drawItemInfo(itemInfo: ItemInfo, data: Data, redraw: boole
             for (const v of itemInfo.item.ventures) {
                 const venture = getVentureIndex(v);
                 const jobCategories = getJobCategoriesIndex(venture.jobs);
-                console.log(venture);
 
                 ctx.save();
                 ctx.fillStyle = "#FFFFFF";
