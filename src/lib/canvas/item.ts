@@ -5,7 +5,8 @@ import path from "path";
 import {__root_dir} from "../../index";
 import {toReadableTime} from "../util/format";
 
-export async function drawItemInfo(itemInfo: ItemInfo, data: Data) {
+let w = 0, h = 0;
+export async function drawItemInfo(itemInfo: ItemInfo, data: Data, redraw: boolean = false) {
     const top = 16, bottom = 16,
         left = 16, right = 16;
 
@@ -14,7 +15,9 @@ export async function drawItemInfo(itemInfo: ItemInfo, data: Data) {
 
     const tinyIconHeight = 24;
 
-    const canvas = new Canvas(left + drawWidth + right, top + bottom);
+    const canvas = new Canvas(
+        redraw ? w : (left + drawWidth + right),
+        redraw ? h : (top + bottom));
     const ctx = canvas.getContext("2d");
 
     const drawPos = [left, right]
@@ -619,6 +622,9 @@ export async function drawItemInfo(itemInfo: ItemInfo, data: Data) {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.restore();
     }
+
+    w = canvas.width;
+    h = canvas.height;
 
     return canvas.toBuffer("png");
 }
