@@ -46,6 +46,11 @@ export async function drawItemInfo(itemInfo: ItemInfo, data: Data, redraw: boole
         return data.jobs[id];
     }
 
+    const getJobCategoriesIndex = (id: number) => {
+        if (!data.jobCategories[id]) return null;
+        return data.jobCategories[id];
+    }
+
     const getVentureIndex = (id: number) => {
         if (!data.ventureIndex[id]) return null;
         return data.ventureIndex[id];
@@ -299,7 +304,8 @@ export async function drawItemInfo(itemInfo: ItemInfo, data: Data, redraw: boole
 
             for (const v of itemInfo.item.ventures) {
                 const venture = getVentureIndex(v);
-                const job = getJobIndex(venture.jobs);
+                const jobCategories = getJobCategoriesIndex(venture.jobs);
+                console.log(venture);
 
                 ctx.save();
                 ctx.fillStyle = "#FFFFFF";
@@ -318,7 +324,7 @@ export async function drawItemInfo(itemInfo: ItemInfo, data: Data, redraw: boole
                 ctx.textAlign = "left";
                 ctx.textBaseline = "top";
                 ctx.font = "12px Georgia,WenquanyiZhengHei,simhei,sans";
-                const jobName = `${job.category}（需要${venture.cost}枚探险币）`;
+                const jobName = `${jobCategories.name}（需要${venture.cost}枚探险币）`;
                 const jobNameMeasure = ctx.measureText(jobName);
                 const jobNameHeight = jobNameMeasure.lines.map(l => l.height).reduce((a, b) => a + b);
                 ctx.fillText(jobName, drawPos[0], drawPos[1]);
@@ -326,7 +332,7 @@ export async function drawItemInfo(itemInfo: ItemInfo, data: Data, redraw: boole
                 ctx.restore();
 
                 drawPos[0] = left;
-                const attrName = venture.ilvl ? "装备等级" : venture.gathering ? "采集力" : "未知属性";
+                const attrName = venture.ilvl ? "装备等级" : venture.gathering ? "鉴别力" : "未知属性";
                 ctx.save();
                 ctx.fillStyle = "#FFFFFF";
                 ctx.textAlign = "left";
