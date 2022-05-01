@@ -14,7 +14,8 @@ export async function drawItemPriceList(itemInfo: {
     LevelItem: number,
     ItemKind: { Name: string },
     ItemSearchCategory: { Name: string },
-    Rarity: number
+    Rarity: number,
+    CanBeHq: number
 }, saleInfo: {
     itemID: number,
     lastUploadTime: number,
@@ -137,11 +138,15 @@ export async function drawItemPriceList(itemInfo: {
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
     ctx.textWrap = false;
+    const minPriceNQ = `${saleInfo.minPriceNQ}`;
+    const minPriceHQ = itemInfo.CanBeHq ? `${saleInfo.minPriceHQ}` : "无HQ版本";
+    const maxPriceNQ = `${saleInfo.maxPriceNQ}`;
+    const maxPriceHQ = itemInfo.CanBeHq ? `${saleInfo.maxPriceHQ}` : "无HQ版本";
     const maxNumberTextWidth = Math.max(
-        ctx.measureText(`${saleInfo.minPriceNQ}`).width,
-        ctx.measureText(`${saleInfo.minPriceHQ}`).width,
-        ctx.measureText(`${saleInfo.maxPriceNQ}`).width,
-        ctx.measureText(`${saleInfo.maxPriceHQ}`).width,
+        ctx.measureText(`${minPriceNQ}`).width,
+        ctx.measureText(`${minPriceHQ}`).width,
+        ctx.measureText(`${maxPriceNQ}`).width,
+        ctx.measureText(`${maxPriceHQ}`).width,
     );
 
     const itemPriceCompareAreaHeight = Math.max(legendsArea.height, linearHeight * 4 + duration);
@@ -157,7 +162,7 @@ export async function drawItemPriceList(itemInfo: {
         left + legendsArea.width + duration, itemPriceCompareAreaTop,
         minPriceNQLinearWidth, linearHeight);
     ctx.restore();
-    ctx.fillText(`${saleInfo.minPriceNQ}`,
+    ctx.fillText(minPriceNQ,
         left + legendsArea.width + duration + minPriceNQLinearWidth + (saleInfo.minPriceNQ ? duration : 0),
         itemPriceCompareAreaTop + linearHeight / 2);
 
@@ -169,7 +174,7 @@ export async function drawItemPriceList(itemInfo: {
         left + legendsArea.width + duration, itemPriceCompareAreaTop + linearHeight,
         minPriceHQLinearWidth, linearHeight);
     ctx.restore();
-    ctx.fillText(`${saleInfo.minPriceHQ}`,
+    ctx.fillText(minPriceHQ,
         left + legendsArea.width + duration + minPriceHQLinearWidth + (saleInfo.minPriceHQ ? duration : 0),
         itemPriceCompareAreaTop + linearHeight + linearHeight / 2);
 
@@ -181,7 +186,7 @@ export async function drawItemPriceList(itemInfo: {
         left + legendsArea.width + duration, itemPriceCompareAreaTop + linearHeight * 2 + duration,
         maxPriceNQLinearWidth, linearHeight);
     ctx.restore();
-    ctx.fillText(`${saleInfo.maxPriceNQ}`,
+    ctx.fillText(maxPriceNQ,
         left + legendsArea.width + duration + maxPriceNQLinearWidth + (saleInfo.maxPriceNQ ? duration : 0),
         itemPriceCompareAreaTop + linearHeight * 2 + duration + linearHeight / 2);
 
@@ -193,7 +198,7 @@ export async function drawItemPriceList(itemInfo: {
         left + legendsArea.width + duration, itemPriceCompareAreaTop + linearHeight * 3 + duration,
         maxPriceHQLinearWidth, linearHeight);
     ctx.restore();
-    ctx.fillText(`${saleInfo.maxPriceHQ}`,
+    ctx.fillText(maxPriceHQ,
         left + legendsArea.width + duration + maxPriceHQLinearWidth + (saleInfo.maxPriceHQ ? duration : 0),
         itemPriceCompareAreaTop + linearHeight * 3 + duration + linearHeight / 2);
 

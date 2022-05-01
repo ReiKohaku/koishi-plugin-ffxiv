@@ -1,8 +1,9 @@
 import {Context, segment} from "koishi-core";
 import {getMarketCurrentlyShown} from "./lib/API/universalis";
 import {drawItemPriceList} from "./lib/canvas/universalis";
-import {ItemBase, searchItem} from "./lib/API/xivapi";
+import {getItem, ItemBase, searchItem} from "./lib/API/xivapi";
 import itemAlias from "./lib/util/alias";
+import {toCurrentTimeDifference} from "./lib/util/format";
 
 export function apply(ctx: Context) {
     ctx.command("ffxiv.market <name:string>")
@@ -87,9 +88,13 @@ export function apply(ctx: Context) {
                         item = pageItemList[replyInt - 1];
                     } else item = itemList[0];
                 }
+                const itemInfo = await getItem(item.ID);
+                if (!itemInfo.CanBeHq && options.hq) return `${itemInfo.Name}不存在HQ版本。`
 
                 const saleInfo = await getMarketCurrentlyShown(options.s || "莫古力", item.ID, { hq: options.hq ? 1 : undefined });
-                const listImg: Buffer = await drawItemPriceList(item, saleInfo);
+                if (!saleInfo.listings.length) return `当前没有售卖${itemInfo.Name}${options.hq ? "HQ" : ""}的记录（最后更新于${toCurrentTimeDifference(new Date(saleInfo.lastUploadTime), true)}）。`
+
+                const listImg: Buffer = await drawItemPriceList(itemInfo, saleInfo);
                 return segment("image", { url: "base64://" + listImg.toString("base64") });
                 /*
                 return (isGroupMsg ? "" : `${segment("image", {url: `https://cafemaker.wakingsands.com${item.Icon}`})}\r`) +
