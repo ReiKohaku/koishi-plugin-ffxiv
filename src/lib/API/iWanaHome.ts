@@ -64,7 +64,7 @@ export const territories: { [key: number]: { full: string, short: string } } = {
     340: { full: "薰衣草苗圃", short: "森" },
     341: { full: "高脚孤丘", short: "沙" },
     641: { full: "白银乡", short: "白" },
-    979: { full: "天穹苑", short: "伊" }
+    979: { full: "穹顶皓天", short: "雪" }
 }
 
 export const dc_server: { dc_name: string, servers: {[key: number]: string} }[] = [
