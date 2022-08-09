@@ -1,4 +1,4 @@
-import {Context, segment} from "koishi-core";
+import {Context, segment} from "koishi";
 import {getServers} from "./lib/API/sdoFF14Data";
 import {drawServerStatus} from "./lib/canvas/serverStatus";
 

@@ -1,4 +1,4 @@
-import {Context, segment} from "koishi-core";
+import {Context, segment} from "koishi";
 import {EorzeaTime} from "./lib/util/eorzeaTime";
 import {insertStr, prefixNum} from "./lib/util/format";
 

@@ -1,4 +1,4 @@
-import {Context} from "koishi-core";
+import {Context} from "koishi";
 import {newsConfig, rssFF14Sdo} from "./lib/rss/sdo";
 import {
     addBroadcastInfo,
@@ -9,6 +9,29 @@ import {
 } from "./lib/leveldb/news";
 
 export async function apply(ctx: Context) {
+    ctx.command("ffxiv.news [status:string]")
+        .alias("新闻推送")
+        .action(async ({session}, status?: string) => {
+            const broadcastInfo: BroadcastInfo = {
+                selfId: session.sid,
+                channelId: session.channelId
+            }
+            if (status && ["on", "off", "开", "关"].includes(status.toLowerCase())) {
+                if (status.toLowerCase() === "on" || status.toLowerCase() === "开") {
+                    if (await addBroadcastInfo(broadcastInfo)) {
+                        console.log(`[${new Date().toLocaleTimeString("zh-CN", { hour12: false })}] ${session.channelId}打开了国服新闻推送。`)
+                        broadcastList = await getBroadcastInfo();
+                        return "成功开启国服新闻推送。";
+                    }
+                    else return "国服新闻推送已开启，无需重复开启。";
+                }
+                console.log(`[${new Date().toLocaleTimeString("zh-CN", { hour12: false })}] ${session.channelId}关闭了国服新闻推送。`)
+                await removeBroadcastInfo(broadcastInfo);
+                broadcastList = await getBroadcastInfo();
+                return "成功关闭国服新闻推送。";
+            }
+        })
+
     /* 启动rss定时检查推送 */
     let broadcastList: BroadcastInfo[] = await getBroadcastInfo();
 
@@ -38,8 +61,9 @@ export async function apply(ctx: Context) {
                         `${(n.contentSnippet.length >= 100) ? (n.contentSnippet.slice(0, 97) + "...") : n.contentSnippet}\r` +
                         `${n.link}`)
                     .join("\r--------\r")
-                for (const group of broadcastList) {
-                    await ctx.getBot(group.platform, group.selfId).sendMessage(group.channelId, content, group.groupId).catch(console.error);
+                for (const ch of broadcastList) {
+                    const bot = ctx.bots.get(ch.selfId);
+                    await bot.sendMessage(ch.channelId, content);
                 }
                 console.log(`[${new Date().toLocaleTimeString("zh-CN", { hour12: false })}] 已推送消息至${broadcastList.length}个会话。`)
             }
@@ -51,29 +75,4 @@ export async function apply(ctx: Context) {
         }
     }
     void broadcastNews();
-
-    ctx.command("ffxiv.news [status:string]")
-        .alias("新闻推送")
-        .action(async ({session}, status?: string) => {
-            const broadcastInfo: BroadcastInfo = {
-                platform: session.platform,
-                selfId: session.selfId,
-                channelId: session.channelId,
-                groupId: session.groupId
-            }
-            if (status && (status.toLowerCase() === "on" || status.toLowerCase() === "off")) {
-                if (status.toLowerCase() === "on") {
-                    if (await addBroadcastInfo(broadcastInfo)) {
-                        console.log(`[${new Date().toLocaleTimeString("zh-CN", { hour12: false })}] ${session.channelId}打开了国服新闻推送。`)
-                        broadcastList = await getBroadcastInfo();
-                        return "成功开启国服新闻推送。";
-                    }
-                    else return "国服新闻推送已开启，无需重复开启。";
-                }
-                console.log(`[${new Date().toLocaleTimeString("zh-CN", { hour12: false })}] ${session.channelId}关闭了国服新闻推送。`)
-                await removeBroadcastInfo(broadcastInfo);
-                broadcastList = await getBroadcastInfo();
-                return "成功关闭国服新闻推送。";
-            }
-        })
 }

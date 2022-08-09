@@ -1,4 +1,4 @@
-import {Context} from "koishi-core";
+import {Context} from "koishi";
 
 export function apply(ctx: Context) {
     const getRollResult = (min, max): string => `抛出命运的骰子！您扔出了${min + Math.floor(Math.random() * (max - min + 1))}点。`

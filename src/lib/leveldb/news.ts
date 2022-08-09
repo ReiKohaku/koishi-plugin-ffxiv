@@ -1,13 +1,10 @@
 import path from "path";
 import fs from "fs";
-import {Platform} from "koishi-core";
 import {LevelDB} from "./index";
 
 export interface BroadcastInfo {
-    platform: Platform
     selfId: string
     channelId: string
-    groupId?: string
 }
 
 if (!fs.existsSync(path.join(process.cwd(), "/data"))) fs.mkdirSync(path.join(process.cwd(), "/data"));
@@ -47,10 +44,8 @@ export async function addBroadcastInfo(info: BroadcastInfo): Promise<boolean> {
 
 export function broadcastInfoIndex(list: BroadcastInfo[], info: BroadcastInfo): number {
     for (let i = 0; i < list.length; ) {
-        if (list[i].platform === info.platform &&
-            list[i].selfId === info.selfId &&
-            list[i].channelId === info.channelId &&
-            (!info.groupId || (info.groupId && list[i].groupId === info.groupId)))
+        if (list[i].selfId === info.selfId &&
+            list[i].channelId === info.channelId)
             return i;
         i++;
     }

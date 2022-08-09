@@ -1,4 +1,4 @@
-import {Context} from "koishi-core";
+import {Context} from "koishi";
 import crypto from "crypto";
 
 export function apply(ctx: Context) {

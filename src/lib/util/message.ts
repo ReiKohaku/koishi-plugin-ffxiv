@@ -1,4 +1,4 @@
-import {segment, Session} from "koishi-core";
+import {segment, Session} from "koishi";
 
 function _wrapReply (messageId: string, content: string)
 function _wrapReply (session: Session, content: string)

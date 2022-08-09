@@ -1,4 +1,4 @@
-import {Context, segment} from "koishi-core";
+import {Context, segment} from "koishi";
 import {ItemBase, searchItem} from "./lib/API/xivapi";
 import itemAlias from "./lib/util/alias";
 import {getData, getItem} from "./lib/API/GarlandTools";

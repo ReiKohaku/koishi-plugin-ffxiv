@@ -1,4 +1,4 @@
-import {Context} from "koishi-core";
+import {Context} from "koishi";
 import {getData, getQuest, getQuests} from "./lib/API/GarlandTools";
 import {insertStr} from "./lib/util/format";
 

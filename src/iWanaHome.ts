@@ -1,4 +1,4 @@
-import {Context} from "koishi-core";
+import {Context} from "koishi";
 import {getServerAllHouseInfo, servers, territories} from "./lib/API/iWanaHome";
 import {prefixNum, toCurrentTimeDifference} from "./lib/util/format";
 

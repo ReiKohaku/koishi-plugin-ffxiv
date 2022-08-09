@@ -1,4 +1,4 @@
-import {Context, segment} from "koishi-core";
+import {Context, segment} from "koishi";
 import {getMarketCurrentlyShown} from "./lib/API/universalis";
 import {drawItemPriceList} from "./lib/canvas/universalis";
 import {getItem, ItemBase, searchItem} from "./lib/API/xivapi";
