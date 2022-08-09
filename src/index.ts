@@ -1,7 +1,7 @@
 import * as path from "path";
 export const __root_dir = path.join(__dirname, "../");
 
-import {Context} from "koishi";
+import {Context, Schema} from "koishi";
 
 import * as universalis from "./universalis";
 import * as scheduler from "./scheduler";
@@ -19,6 +19,10 @@ export interface Config {
 }
 
 const defaultConfig: Config = {}
+
+export const schema = Schema.object({
+    admin: Schema.array(Schema.string()).default([])
+})
 
 export function apply(ctx: Context, options: Config = {}) {
     options = { ...defaultConfig, ...options };
