@@ -64,7 +64,7 @@ export const territories: { [key: number]: { full: string, short: string } } = {
     340: { full: "薰衣草苗圃", short: "森" },
     341: { full: "高脚孤丘", short: "沙" },
     641: { full: "白银乡", short: "白" },
-    979: { full: "穹顶皓天", short: "雪" }
+    979: { full: "穹顶皓天", short: "天" }
 }
 
 export const dc_server: { dc_name: string, servers: {[key: number]: string} }[] = [
@@ -112,7 +112,8 @@ export const dc_server: { dc_name: string, servers: {[key: number]: string} }[] 
             1183: "银泪湖",
             1192: "水晶塔",
             1180: "太阳海岸",
-            1186: "伊修加德"
+            1186: "伊修加德",
+            1201: "红茶川"
         }
     }
 ]
