@@ -88,7 +88,6 @@ export async function drawItemPriceList(itemInfo: {
     ctx.save();
     const fetchTargetType: "region" | "dc" | "world" | "unknown" = saleInfo.worldName ? "world" : saleInfo.dcName ? "dc" : saleInfo.regionName ? "region" : "unknown";
     const fetchTargetName: string = (fetchTargetType === "world") ? saleInfo.worldName : (fetchTargetType === "dc") ? saleInfo.dcName : (fetchTargetType === "region") ? saleInfo.regionName : "未知";
-    console.log(fetchTargetType, fetchTargetName)
     const itemLastUpdateDesc = `${fetchTargetName}${(fetchTargetType === "dc") ? "区" : ""} | 最后更新于${toCurrentTimeDifference(new Date(saleInfo.lastUploadTime), true)}（${new Date(saleInfo.lastUploadTime).toLocaleString("zh-CN", { hour12: false })}）`;
     ctx.fillStyle = "rgb(180, 180, 180)";
     ctx.font = "14px Georgia,WenquanyiZhengHei,simhei,Sans";
