@@ -1,5 +1,5 @@
 import {Context, segment} from "koishi";
-import {getMarketCurrentlyShown} from "./lib/API/universalis";
+import {getMarketBoardCurrentData} from "./lib/API/universalis";
 import {drawItemPriceList} from "./lib/canvas/universalis";
 import {getItem, ItemBase, searchItem} from "./lib/API/xivapi";
 import itemAlias from "./lib/util/alias";
@@ -8,20 +8,30 @@ import {toCurrentTimeDifference} from "./lib/util/format";
 export function apply(ctx: Context) {
     ctx.command("ffxiv.market <name:string>")
         .alias("物价查询")
+        .usage(
+            "使用“物价查询”进行基本的物价查询操作。\r" +
+            "示例1：查询莫古力区潮风亭服务器的“弦月睡袍”物品最低的若干条价格\r" +
+            "物价查询 -s 潮风亭 弦月睡袍\r" +
+            "示例2：查询陆行鸟区全区的高品质“巨匠药酒”物品最低的若干条价格\r" +
+            "鸟区物价 巨匠药酒hq\r" +
+            "\r" +
+            "使用提示：\r" +
+            "1、可以少字，但千万不要多字或错字，否则将无法查询到物品；\r" +
+            "2、可以直接用“鸟/猪/猫/狗+区物价”查询对应大区的物价，正如示例2所示；\r" +
+            "3、数据来源于universalis，全部由玩家上传（如使用Match抹茶插件自动上传），因此很有可能会出现不准确的情况，故本功能查询到的结果仅供参考。")
         .option("hq", "--hq 携带此参数时只查询HQ结果。")
         .option("s", "--server <serverOrDc:string> 指定要查询的服务器或大区，默认为“莫古力”。")
         .shortcut("鸟区物价", { fuzzy: true, options: { s: "陆行鸟" } })
         .shortcut("猪区物价", { fuzzy: true, options: { s: "莫古力" } })
         .shortcut("猫区物价", { fuzzy: true, options: { s: "猫小胖" } })
         .shortcut("狗区物价", { fuzzy: true, options: { s: "豆豆柴" } })
+        .shortcut("国服物价", { fuzzy: true, options: { s: "China" } })
+        .shortcut("日服物价", { fuzzy: true, options: { s: "Japan" } })
+        .shortcut("欧服物价", { fuzzy: true, options: { s: "Europe" } })
+        .shortcut("北美服物价", { fuzzy: true, options: { s: "North-America" } })
+        .shortcut("大洋洲服物价", { fuzzy: true, options: { s: "Oceania" } })
         .action(async({ session, options }, name: string) => {
             if (!name || !name.length) return "请输入要查询物价的物品名称！";
-            /*
-                koishi v3特性：自动进行繁转简
-                导致问题：“猛”会转为“勐”，导致查询失败
-                目前先使用特判解决此问题
-             */
-            name = name.replace("勐", "猛");
 
             const isGroupMsg: boolean = session.subtype === "group";
             try {
@@ -91,7 +101,7 @@ export function apply(ctx: Context) {
                 const itemInfo = await getItem(item.ID);
                 if (!itemInfo.CanBeHq && options.hq) return `${itemInfo.Name}不存在HQ版本。`
 
-                const saleInfo = await getMarketCurrentlyShown(options.s || "莫古力", item.ID, { hq: options.hq ? 1 : undefined });
+                const saleInfo = await getMarketBoardCurrentData(options.s || "莫古力", item.ID, { hq: options.hq ? 1 : undefined });
                 if (!saleInfo.listings.length) return `当前没有售卖${itemInfo.Name}${options.hq ? "HQ" : ""}的记录（最后更新于${toCurrentTimeDifference(new Date(saleInfo.lastUploadTime), true)}）。`
 
                 const listImg: Buffer = await drawItemPriceList(itemInfo, saleInfo);
@@ -111,4 +121,17 @@ export function apply(ctx: Context) {
                 return "查询失败，错误信息：\r" + e;
             }
         })
+
+    // TODO: 物价统计功能，预计将于下个小版本推出
+    /*
+    ctx.command("ffxiv.price-statistics <type:string>")
+        .alias("物价统计")
+        .usage("")
+        .action(async({ session, options }, type: string) => {
+            //  由于统计需要扫描所有可能的物品，因此更新频率不宜过高，设计为每24小时全部扫描更新一次
+            //  支持的统计种类：
+            //  1. 最赚钱单品：即可通过生产职业制造获得的物品，根据原料价格（含税）计算得出单品成本，再根据当前最低的价格计算出利润空间，最后按照金额得出赚钱数额排序；
+            //  2. 最赚钱雇员委托物品：计算各服务器的雇员能带回的物品中，平均到每个探险币收益最大的物品；
+        })
+    */
 }

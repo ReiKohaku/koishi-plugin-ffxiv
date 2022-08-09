@@ -4,6 +4,7 @@ import {__root_dir} from "../../index";
 import * as path from "path";
 import getRarityColor from "../util/getRarityColor";
 import {toCurrentTimeDifference} from "../util/format";
+import {MarketBoardCurrentDataResponse} from "../API/universalis";
 
 if (!FontLibrary.has("Georgia")) FontLibrary.use("Georgia", path.join(__root_dir, "/public/fonts/Georgia.ttf"));
 if (!FontLibrary.has("WenquanyiZhengHei")) FontLibrary.use("WenquanyiZhengHei", path.join(__root_dir, "/public/fonts/WenquanyiZhengHei.ttf"));
@@ -16,25 +17,7 @@ export async function drawItemPriceList(itemInfo: {
     ItemSearchCategory: { Name: string },
     Rarity: number,
     CanBeHq: number
-}, saleInfo: {
-    itemID: number,
-    lastUploadTime: number,
-    dcName?: string,
-    worldName?: string,
-    minPriceNQ: number,
-    minPriceHQ: number,
-    maxPriceNQ: number,
-    maxPriceHQ: number,
-    listings: {
-        lastReviewTime: number
-        worldName?: string,
-        hq: boolean,
-        pricePerUnit: number,
-        quantity: number,
-        total: number,
-        retainerName: string
-    }[]
-}): Promise<Buffer> {
+}, saleInfo: MarketBoardCurrentDataResponse): Promise<Buffer> {
     const width = 720, height = 960;
     const top = 16, bottom = 16,
         left = 16, right = 16,
@@ -103,7 +86,10 @@ export async function drawItemPriceList(itemInfo: {
 
     /* 写物品最后更新信息 */
     ctx.save();
-    const itemLastUpdateDesc = `${saleInfo.worldName || `${saleInfo.dcName}区`} | 最后更新于${toCurrentTimeDifference(new Date(saleInfo.lastUploadTime), true)}（${new Date(saleInfo.lastUploadTime).toLocaleString("zh-CN", { hour12: false })}）`;
+    const fetchTargetType: "region" | "dc" | "world" | "unknown" = saleInfo.worldName ? "world" : saleInfo.dcName ? "dc" : saleInfo.regionName ? "region" : "unknown";
+    const fetchTargetName: string = (fetchTargetType === "world") ? saleInfo.worldName : (fetchTargetType === "dc") ? saleInfo.dcName : (fetchTargetType === "region") ? saleInfo.regionName : "未知";
+    console.log(fetchTargetType, fetchTargetName)
+    const itemLastUpdateDesc = `${fetchTargetName}${(fetchTargetType === "dc") ? "区" : ""} | 最后更新于${toCurrentTimeDifference(new Date(saleInfo.lastUploadTime), true)}（${new Date(saleInfo.lastUploadTime).toLocaleString("zh-CN", { hour12: false })}）`;
     ctx.fillStyle = "rgb(180, 180, 180)";
     ctx.font = "14px Georgia,WenquanyiZhengHei,simhei,Sans";
     ctx.textAlign = "left";
@@ -277,7 +263,7 @@ export async function drawItemPriceList(itemInfo: {
 
         ctx.fillStyle = "rgb(192, 192, 192)";
         ctx.font = "14px Georgia,WenquanyiZhengHei,simhei,Sans";
-        ctx.fillText(`${item.worldName ? `${item.worldName}` : ""} | ${item.retainerName} | 信息上传于${toCurrentTimeDifference(new Date(item.lastReviewTime * 1000), true)}（${new Date(item.lastReviewTime * 1000).toLocaleString("zh-CN", { hour12: false })}）`, drawPosLeft, drawPosTop)
+        ctx.fillText(`${item.worldName || ""} | ${item.retainerName} | 信息上传于${toCurrentTimeDifference(new Date(item.lastReviewTime * 1000), true)}（${new Date(item.lastReviewTime * 1000).toLocaleString("zh-CN", { hour12: false })}）`, drawPosLeft, drawPosTop)
 
         ctx.restore();
         currentItemTop += itemHeight + duration;

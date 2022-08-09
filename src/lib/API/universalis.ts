@@ -1,15 +1,20 @@
 import Axios, {AxiosResponse} from "axios";
 
+/* 2022-08-09: Use Universalis API v2, Rate Limit 25req/min */
+
 const axios = Axios.create({
-    baseURL: "https://universalis.app/api/"
+    baseURL: "https://universalis.app/api/v2/"
 });
 
-interface CurrentlyShownResponse {
+export interface MarketBoardCurrentDataResponse {
     itemID: number
-    worldID?: number
-    worldName?: string
-    dcName?: string
-    lastUploadTime: number
+    // 查询对象信息 开始
+    regionName?: string // 以地区为对象查询时，包含此项
+    dcName?: string // 以大区为对象查询时，包含此项
+    worldID?: number // 以服务器为对象查询时，包含此项
+    worldName?: string // 以服务器为对象查询时，包含此项
+    // 查询对象信息 结束
+    lastUploadTime: number // 13位时间戳
     listings: {
         lastReviewTime: number
         pricePerUnit: number
@@ -57,10 +62,10 @@ interface CurrentlyShownResponse {
     worldUploadTimes?: Record<number, number>
 }
 
-export async function getMarketCurrentlyShown(server: string, id: number, options: { listings?: string, entries?: number, noGst?: boolean, hq?: boolean | number, statsWithin?: number, entriesWithin?: number } = {}): Promise<CurrentlyShownResponse> {
-    const result: AxiosResponse<CurrentlyShownResponse> = await axios({
+export async function getMarketBoardCurrentData(worldDcRegion: string, itemIds: number, options: { listings?: string, entries?: number, noGst?: boolean, hq?: boolean | number, statsWithin?: number, entriesWithin?: number } = {}): Promise<MarketBoardCurrentDataResponse> {
+    const result: AxiosResponse<MarketBoardCurrentDataResponse> = await axios({
         method: "GET",
-        url: encodeURI(`/${server}/${id}`),
+        url: encodeURI(`/${worldDcRegion}/${itemIds}`),
         params: options
     });
     return result.data;
