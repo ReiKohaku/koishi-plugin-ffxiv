@@ -154,7 +154,7 @@ export async function apply(ctx: Context, config: Config = {}) {
                         return -1;
                     })(args[2]);
                     if (repeat === -1) return "输入的重复方式不正确，请确认后再试。";
-                    const name = args[4];
+                    const name = args[3];
                     const comment = args.length > 4 ? args.slice(4).join(" ") : undefined;
                     await session.send(
                         `您正创建新的提醒事项，请确认以下信息：\r` +
