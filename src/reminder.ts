@@ -55,7 +55,7 @@ export async function apply(ctx: Context, config: Config = {}) {
                     comment: i.comment
                 }
             });
-            list.sort((a, b) => b.time.getTime() - a.time.getTime());
+            list.sort((a, b) => a.time.getTime() - b.time.getTime());
 
             const remindTomorrow = () => {
                 const tomorrow = new Date();
@@ -78,14 +78,11 @@ export async function apply(ctx: Context, config: Config = {}) {
             let nextTime: Date;
             for (const i of list) {
                 if (i.time.getTime() <= lastRemindTime.getTime()) {
-                    console.log()
-                    continue;
-                }
-                if (i.time.getTime() > now.getTime()) {
+                    // Do nothing
+                } else if (i.time.getTime() > now.getTime()) {
                     nextTime = i.time;
                     break;
-                }
-                remindList.push(i);
+                } else remindList.push(i);
             }
 
             if (!remindList.length) console.log(`[${new Date().toLocaleTimeString("zh-CN", { hour12: false })}] 没有任何推送内容。`);
