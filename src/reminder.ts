@@ -93,7 +93,13 @@ export async function apply(ctx: Context, config: Config = {}) {
                 await setLastRemindTime(now);
                 const content = `现在是${now.toLocaleString("zh-CN", { hour12: false })}\r--------\r` + remindList.map(i => `${i.name}${i.comment ? "\r" + i.comment : ""}`).join("\r--------\r");
                 for (const ch of broadcastList) {
-                    const bot = await ctx.bots.get(ch.selfId)
+                    const bot = (() => {
+                        for (const bot of ctx.bots) {
+                            if (bot.selfId === ch.selfId) return bot;
+                        }
+                        return null;
+                    })()
+                    if (!bot) console.error(`[${new Date().toLocaleTimeString("zh-CN", { hour12: false })}] 找不到指定的Bot：${ch.selfId}`);
                     await bot.sendMessage(ch.channelId, content);
                 }
                 console.log(`[${new Date().toLocaleTimeString("zh-CN", { hour12: false })}] 已推送消息至${broadcastList.length}个会话。`);
@@ -117,7 +123,7 @@ export async function apply(ctx: Context, config: Config = {}) {
         .alias("提醒助手")
         .action(async ({session}, status?: string, ...args) => {
             const broadcastInfo: BroadcastInfo = {
-                selfId: session.sid,
+                selfId: session.selfId,
                 channelId: session.channelId
             }
             if (status && ["on", "off", "开", "关"].includes(status.toLowerCase())) {

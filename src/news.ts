@@ -13,7 +13,7 @@ export async function apply(ctx: Context) {
         .alias("新闻推送")
         .action(async ({session}, status?: string) => {
             const broadcastInfo: BroadcastInfo = {
-                selfId: session.sid,
+                selfId: session.selfId,
                 channelId: session.channelId
             }
             if (status && ["on", "off", "开", "关"].includes(status.toLowerCase())) {
@@ -62,7 +62,13 @@ export async function apply(ctx: Context) {
                         `${n.link}`)
                     .join("\r--------\r")
                 for (const ch of broadcastList) {
-                    const bot = ctx.bots.get(ch.selfId);
+                    const bot = (() => {
+                        for (const bot of ctx.bots) {
+                            if (bot.selfId === ch.selfId) return bot;
+                        }
+                        return null;
+                    })()
+                    if (!bot) console.error(`[${new Date().toLocaleTimeString("zh-CN", { hour12: false })}] 找不到指定的Bot：${ch.selfId}`);
                     await bot.sendMessage(ch.channelId, content);
                 }
                 console.log(`[${new Date().toLocaleTimeString("zh-CN", { hour12: false })}] 已推送消息至${broadcastList.length}个会话。`)
