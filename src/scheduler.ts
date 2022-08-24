@@ -184,7 +184,7 @@ export function apply(ctx: Context) {
                     alarms[i] = {
                         ...alarm,
                         action: (alarm: Alarm) => {
-                            session.send(`${session.subtype === "group" ? segment("at", { id: session.userId }) : ""}闹钟 - ${alarm.name}(${toAlarmTypeName(alarm.type)}) ${insertStr(prefixNum(alarm.time, 4), 2, ":")}${alarm.advance ? ` (还有${alarm.advance}分钟)` : ""}`);
+                            // session.send(`${session.subtype === "group" ? segment("at", { id: session.userId }) : ""}闹钟 - ${alarm.name}(${toAlarmTypeName(alarm.type)}) ${insertStr(prefixNum(alarm.time, 4), 2, ":")}${alarm.advance ? ` (还有${alarm.advance}分钟)` : ""}`);
                         }
                     };
                     break;
