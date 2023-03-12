@@ -18,7 +18,7 @@
   ],
   "dependencies": {
     "axios": "^0.24.0",
-    "koishi": "^4.7.6",
+    "koishi": "^4.11.9",
     "leveldown": "^6.1.0",
     "levelup": "^5.1.1",
     "rss-parser": "^3.12.0",
