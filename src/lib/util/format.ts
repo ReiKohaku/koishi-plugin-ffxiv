@@ -27,3 +27,19 @@ export function toReadableTime(time: number): string {
     if (Math.floor(time / 86400)) result = `${Math.floor(time / 86400)}天` + result;
     return result;
 }
+
+export function toReadableNum(num: number, precision?: number, separator = ','): string {
+    let parts;
+    // 判断是否为数字
+    if (isFinite(num)) {
+        // 处理小数点位数
+        let processNum = (typeof precision !== 'undefined' ? num.toFixed(precision) : num).toString();
+        // 分离数字的小数部分和整数部分
+        parts = processNum.split('.');
+        // 整数部分加[separator]分隔, 借用一个著名的正则表达式
+        parts[0] = parts[0].toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1' + (separator || ','));
+
+        return parts.join('.');
+    }
+    return '';
+}

@@ -3,7 +3,7 @@ import {drawLegends} from "./Util";
 import {__root_dir} from "../../index";
 import * as path from "path";
 import getRarityColor from "../util/getRarityColor";
-import {toCurrentTimeDifference} from "../util/format";
+import {toCurrentTimeDifference, toReadableNum} from "../util/format";
 import {MarketBoardCurrentDataResponse} from "../API/universalis";
 
 if (!FontLibrary.has("Georgia")) FontLibrary.use("Georgia", path.join(__root_dir, "/public/fonts/Georgia.ttf"));
@@ -231,7 +231,7 @@ export async function drawItemPriceList(itemInfo: {
         ctx.font = "16px Georgia,WenquanyiZhengHei,simhei,Sans";
         ctx.textAlign = "left";
         ctx.textBaseline = "top";
-        const itemPerPriceText = `${item.pricePerUnit}Gil/个`;
+        const itemPerPriceText = `${toReadableNum(item.pricePerUnit)}Gil/个`;
         const itemPerPriceTextMeasure = ctx.measureText(itemPerPriceText);
         const itemPerPriceTextWidth = itemPerPriceTextMeasure.width;
         const itemPerPriceTextHeight = itemPerPriceTextMeasure.lines.map(l => l.height).reduce((p, c) => p + c);
@@ -245,13 +245,13 @@ export async function drawItemPriceList(itemInfo: {
         }
         drawPosLeft += duration;
 
-        const itemQuantityText = `${item.quantity}个`;
+        const itemQuantityText = `${toReadableNum(item.quantity)}个`;
         const itemQuantityTextWidth = ctx.measureText(itemQuantityText).width;
         ctx.fillText(itemQuantityText, drawPosLeft, drawPosTop);
         drawPosLeft += itemQuantityTextWidth;
         drawPosLeft += duration;
 
-        const itemTotalText = `共计${item.total}Gil`;
+        const itemTotalText = `共计${toReadableNum(item.total)}Gil`;
         const itemTotalTextWidth = ctx.measureText(itemTotalText).width;
         ctx.fillText(itemTotalText, drawPosLeft, drawPosTop);
         drawPosLeft += itemTotalTextWidth;
