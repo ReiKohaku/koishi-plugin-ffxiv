@@ -15,13 +15,21 @@ import * as quest from "./quest"
 import * as item from "./item"
 
 export interface Config {
-    admin?: string[]
+    admin?: string[],
+    market?: {
+        type: 'text' | 'image'
+    }
 }
 
-const defaultConfig: Config = {}
+const defaultConfig: Config = {
+    market: {
+        type: 'image'
+    }
+}
 
 export const schema = Schema.object({
-    admin: Schema.array(Schema.string()).default([])
+    admin: Schema.array(Schema.string()).default([]),
+    market: Schema.object({ type: Schema.union(['text', 'image']) }).default({ type: 'image' })
 })
 
 export function apply(ctx: Context, options: Config = {}) {
@@ -30,7 +38,7 @@ export function apply(ctx: Context, options: Config = {}) {
     ctx.command("ffxiv")
         .alias("ff14");
 
-    ctx.plugin(universalis);
+    ctx.plugin(universalis, options.market);
     ctx.plugin(scheduler);
     ctx.plugin(iWanaHome);
     ctx.plugin(random);

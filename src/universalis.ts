@@ -5,7 +5,11 @@ import {getItem, ItemBase, searchItem} from "./lib/API/xivapi";
 import itemAlias from "./lib/util/alias";
 import {toCurrentTimeDifference} from "./lib/util/format";
 
-export function apply(ctx: Context) {
+export interface Config {
+    type?: 'text' | 'image'
+}
+
+export function apply(ctx: Context, config: Config = { type: 'image' }) {
     ctx.command("ffxiv.market <name:string>")
         .alias("物价查询")
         .usage(
@@ -41,7 +45,7 @@ export function apply(ctx: Context) {
                 }
                 /* 特性：允许部分商品使用简称 */
                 name = itemAlias.findItemName(name);
-                const limit = isGroupMsg ? 5 : 10;
+                const limit = isGroupMsg ? 8 : 15;
                 let item: ItemBase, page: number = 1;
 
                 /* 获取所有物品列表 */
@@ -104,18 +108,19 @@ export function apply(ctx: Context) {
                 const saleInfo = await getMarketBoardCurrentData(options.s || "莫古力", item.ID, { hq: options.hq ? 1 : undefined });
                 if (!saleInfo.listings.length) return `当前没有售卖${itemInfo.Name}${options.hq ? "HQ" : ""}的记录（最后更新于${toCurrentTimeDifference(new Date(saleInfo.lastUploadTime), true)}）。`
 
-                const listImg: Buffer = await drawItemPriceList(itemInfo, saleInfo);
-                return segment("image", { url: "base64://" + listImg.toString("base64") });
-                /*
-                return (isGroupMsg ? "" : `${segment("image", {url: `https://cafemaker.wakingsands.com${item.Icon}`})}\r`) +
-                    `[${item.LevelItem}]${item.Name}` +
-                    `在${saleInfo.worldName || `${saleInfo.dcName}区`}的售卖信息：\r` +
-                    `最后更新于 ${new Date(saleInfo.lastUploadTime).toLocaleString()}\r` +
-                    `最高NQ/HQ价格：${saleInfo.maxPriceNQ}/${saleInfo.maxPriceHQ}\r` +
-                    `最低NQ/HQ价格：${saleInfo.minPriceNQ}/${saleInfo.minPriceHQ}\r` +
-                    `正售卖的前${Math.min(saleInfo.listings.length, limit)}组商品信息：\r` +
-                    saleInfo.listings.slice(0, limit).map(item => `${item.worldName ? `[${item.worldName}]` : ""}${item.hq ? "[HQ]" : ""}${item.quantity}个×${item.pricePerUnit}金＝${item.total}金`).join("\r");
-                 */
+                if (config.type === 'image') {
+                    const listImg: Buffer = await drawItemPriceList(itemInfo, saleInfo);
+                    return segment("image", { url: "base64://" + listImg.toString("base64") });
+                } else {
+                    return (isGroupMsg ? "" : `${segment("image", {url: `https://cafemaker.wakingsands.com${item.Icon}`})}\r`) +
+                        `[${item.LevelItem}]${item.Name}` +
+                        `在${saleInfo.worldName || `${saleInfo.dcName}区`}的售卖信息：\r` +
+                        `最后更新于 ${new Date(saleInfo.lastUploadTime).toLocaleString()}\r` +
+                        `最高NQ/HQ价格：${saleInfo.maxPriceNQ}/${saleInfo.maxPriceHQ}\r` +
+                        `最低NQ/HQ价格：${saleInfo.minPriceNQ}/${saleInfo.minPriceHQ}\r` +
+                        `正售卖的前${Math.min(saleInfo.listings.length, limit)}组商品信息：\r` +
+                        saleInfo.listings.slice(0, limit).map(item => `${item.worldName ? `[${item.worldName}]` : ""}${item.hq ? "[HQ]" : ""}${item.quantity}个×${item.pricePerUnit}金＝${item.total}金`).join("\r");
+                }
             } catch (e) {
                 console.error(e);
                 return "查询失败，错误信息：\r" + e;
