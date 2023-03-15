@@ -18,11 +18,13 @@
   ],
   "dependencies": {
     "axios": "^0.24.0",
-    "koishi": "^4.11.9",
     "leveldown": "^6.1.0",
     "levelup": "^5.1.1",
     "rss-parser": "^3.12.0",
     "skia-canvas": "^0.9.29"
+  },
+  "peerDependencies": {
+    "koishi": "^4.11.9"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -36,7 +38,9 @@
   "keywords": [
     "ffxiv",
     "bot",
-    "koishi"
+    "koishi",
+    "chatbot",
+    "plugin"
   ],
   "author": {
     "name": "ReiKohaku",
@@ -50,5 +54,12 @@
   "homepage": "https://github.com/ReiKohaku/koishi-plugin-ffxiv#readme",
   "publishConfig": {
     "access": "public"
+  },
+  "koishi": {
+    "description": {
+      "zh": "一款基于koishi开发的包含许多常用功能的FF14插件",
+      "en": "A Final Fantasy XIV helper plugin for koishi"
+    },
+    "locales": ["zh"]
   }
 }
