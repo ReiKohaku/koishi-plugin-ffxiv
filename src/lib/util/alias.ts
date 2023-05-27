@@ -56,6 +56,7 @@ alias.addItem("陈旧的绿飘龙革地图", ["g11"]);
 alias.addItem("陈旧的缠尾蛟革地图", ["g12"]);
 alias.addItem("陈旧的高鼻羚羊革地图", ["g13"]);
 alias.addItem("陈旧的金毗罗鳄革地图", ["g14"]);
+alias.addItem("陈旧的蛇牛革地图", ["g15"]);
 alias.addItem("鞣革制的隐藏地图", ["单人绿", "单人绿图"]);
 
 // 加入魔晶石系列，用代码生成
