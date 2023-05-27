@@ -39,7 +39,7 @@ export function apply(ctx: Context) {
                            `共查询到${onSale.length}条记录${(onSale.length > sliceNum) ? `，其中抽选人数最少的${Math.min(onSale.length, sliceNum)}条${sizeNumber === undefined ? '' : `${sizeType[sizeNumber]}房`}房屋信息` : ''}：\r` +
                            onSale.slice(0, sliceNum).map(h => {
                                const houseLoc = `${areas[h.Area].short}${prefixNum(h.Slot + 1, 2)}-${prefixNum(h.ID, 2)}`;
-                               return `${houseLoc} | ${toReadableNum(h.Price)}Gil\r${h.Participate}人参与 | 更新于${toCurrentTimeDifference(new Date(h.LastSeen * 1000), true)}）`;
+                               return `${houseLoc} | ${toReadableNum(h.Price)}Gil\r${h.Participate}人参与 | 更新于${toCurrentTimeDifference(new Date(h.LastSeen * 1000), true)}`;
                            }).join("\r") +
                            `\r更多信息请点击链接查看：https://house.ffxiv.cyou/#/`;
                 }
