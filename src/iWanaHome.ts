@@ -2,6 +2,7 @@ import {Context} from "koishi";
 import {getServerAllHouseInfo, servers, territories} from "./lib/API/iWanaHome";
 import {prefixNum, toCurrentTimeDifference, toReadableNum} from "./lib/util/format";
 
+/* 此部分代码已弃用 */
 export function apply(ctx: Context) {
     ctx.command("ffxiv.house <server:string> [size:string] [territory:string] [ward:number]")
         .alias("空房查询")

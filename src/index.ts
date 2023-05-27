@@ -5,7 +5,7 @@ import {Context, Schema} from "koishi";
 
 import * as universalis from "./universalis";
 import * as scheduler from "./scheduler";
-import * as iWanaHome from "./iWanaHome";
+import * as ffixvHouse from "./ffixvHouse";
 import * as random from "./random";
 import * as divination from "./divination";
 import * as serverStatus from "./serverStatus";
@@ -40,7 +40,7 @@ export function apply(ctx: Context, options: Config = {}) {
 
     ctx.plugin(universalis, options.market);
     ctx.plugin(scheduler);
-    ctx.plugin(iWanaHome);
+    ctx.plugin(ffixvHouse);
     ctx.plugin(random);
     ctx.plugin(divination);
     ctx.plugin(serverStatus);
